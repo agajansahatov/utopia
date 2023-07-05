@@ -1,7 +1,7 @@
 let navbarLinks = [
 	{
 		id: 0,
-		auth: 1,
+		auth: 0,
 		label: "Home",
 		url: "/",
 	},
@@ -25,6 +25,12 @@ let navbarLinks = [
 	},
 	{
 		id: 4,
+		auth: 0,
+		label: "Login",
+		url: "/login",
+	},
+	{
+		id: 5,
 		auth: 0,
 		label: "Settings",
 		url: "/settings",

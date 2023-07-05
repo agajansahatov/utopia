@@ -3,20 +3,51 @@ import { getBrand } from "../config/Configuration";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { NavLink } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 interface NavbarLink {
 	id: number;
 	label: ReactNode;
 	url: string;
+	auth: number;
 }
 
 interface Props {
 	links: NavbarLink[];
 }
 
-const NavbarTop = ({ links }: Props) => {
+const TopNavbar = ({ links }: Props) => {
 	const { logo, name: appName } = getBrand();
+	const { user } = useAuth();
 
+	const getRelatedLinks = (auth: boolean) => {
+		if (auth) {
+			return links.map(
+				(link) =>
+					link.url !== "/login" && (
+						<Nav.Link
+							as={NavLink}
+							to={link.url}
+							className="mx-2"
+							key={link.id.toString()}>
+							{link.label}
+						</Nav.Link>
+					)
+			);
+		}
+		return links.map(
+			(link) =>
+				link.auth !== 1 && (
+					<Nav.Link
+						as={NavLink}
+						to={link.url}
+						className="mx-2"
+						key={link.id.toString()}>
+						{link.label}
+					</Nav.Link>
+				)
+		);
+	};
 	return (
 		<Navbar
 			className="bg-body-tertiary px-2 px-md-4"
@@ -35,20 +66,10 @@ const NavbarTop = ({ links }: Props) => {
 			</Navbar.Brand>
 			<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 			<Navbar.Collapse id="responsive-navbar-nav">
-				<Nav className="ms-auto fs-5">
-					{links.map((link) => (
-						<Nav.Link
-							as={NavLink}
-							to={link.url}
-							className="mx-2"
-							key={link.id.toString()}>
-							{link.label}
-						</Nav.Link>
-					))}
-				</Nav>
+				<Nav className="ms-auto fs-5">{getRelatedLinks(user !== null)}</Nav>
 			</Navbar.Collapse>
 		</Navbar>
 	);
 };
 
-export default NavbarTop;
+export default TopNavbar;

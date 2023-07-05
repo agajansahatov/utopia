@@ -7,6 +7,7 @@ import Settings from "./Settings";
 import Login from "./Login";
 import App from "../App";
 import Error404 from "./Error404";
+import PrivateRoutes from "./PrivateRoutes";
 
 const router = createBrowserRouter([
 	{
@@ -15,11 +16,16 @@ const router = createBrowserRouter([
 		errorElement: <Error404 />,
 		children: [
 			{ index: true, element: <Home /> },
+			{ path: "settings", element: <Settings /> },
+			{ path: "login", element: <Login /> },
+		],
+	},
+	{
+		element: <PrivateRoutes />,
+		children: [
 			{ path: "history", element: <History /> },
 			{ path: "balance", element: <Balance /> },
 			{ path: "account", element: <Account /> },
-			{ path: "settings", element: <Settings /> },
-			{ path: "login", element: <Login /> },
 		],
 	},
 ]);
