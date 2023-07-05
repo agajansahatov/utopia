@@ -2,27 +2,32 @@ let navbarLinks = [
 	{
 		id: 0,
 		auth: 1,
-		node: "Home",
+		label: "Home",
+		url: "/",
 	},
 	{
 		id: 1,
 		auth: 1,
-		node: "History",
+		label: "History",
+		url: "/history",
 	},
 	{
 		id: 2,
 		auth: 1,
-		node: "Balance",
+		label: "Balance",
+		url: "/balance",
 	},
 	{
 		id: 3,
 		auth: 1,
-		node: "Account",
+		label: "Account",
+		url: "/account",
 	},
 	{
 		id: 4,
 		auth: 0,
-		node: "Settings",
+		label: "Settings",
+		url: "/settings",
 	},
 ];
 

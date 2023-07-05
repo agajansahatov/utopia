@@ -1,21 +1,21 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
+import { getBrand } from "../config/Configuration";
 import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
-import logo from "../assets/logo.svg";
 import Nav from "react-bootstrap/Nav";
+import { NavLink } from "react-router-dom";
 
 interface NavbarLink {
 	id: number;
-	node: ReactNode;
+	label: ReactNode;
+	url: string;
 }
 
 interface Props {
 	links: NavbarLink[];
-	selected: number;
 }
 
-const NavbarTop = ({ links, selected }: Props) => {
-	const [active, setActive] = useState(selected);
+const NavbarTop = ({ links }: Props) => {
+	const { logo, name: appName } = getBrand();
 
 	return (
 		<Navbar
@@ -24,26 +24,25 @@ const NavbarTop = ({ links, selected }: Props) => {
 			data-bs-theme="dark"
 			fixed="top"
 			expand="md">
-			<Navbar.Brand href="#home">
+			<Navbar.Brand as={NavLink} to="/">
 				<img
 					className="d-inline-block align-middle"
 					src={logo}
 					height="40"
 					alt=""
 				/>
-				<span className="align-middle ms-2">Utopia</span>
+				<span className="align-middle ms-2">{appName}</span>
 			</Navbar.Brand>
 			<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 			<Navbar.Collapse id="responsive-navbar-nav">
 				<Nav className="ms-auto fs-5">
 					{links.map((link) => (
 						<Nav.Link
-							href="#"
+							as={NavLink}
+							to={link.url}
 							className="mx-2"
-							key={link.id.toString()}
-							active={link.id === active}
-							onClick={() => setActive(link.id)}>
-							{link.node}
+							key={link.id.toString()}>
+							{link.label}
 						</Nav.Link>
 					))}
 				</Nav>
