@@ -1,0 +1,21 @@
+.main {
+	margin-top: 2.7rem;
+}
+
+.login-form__container {
+	min-height: 77vh;
+}
+
+.login-form {
+	max-width: 500px;
+}
+
+@media screen and (min-width: 768px) {
+	.login-form__container {
+		min-height: 82vh;
+	}
+
+	.login-form {
+		min-width: 375px;
+	}
+}

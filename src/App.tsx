@@ -1,12 +1,12 @@
 import { getNavbarLinks } from "./config/NavbarLinks";
-import TopNavbar from "./components/TopNavbar";
+import NavbarTop from "./components/NavbarTop";
 import { Outlet } from "react-router-dom";
 
 const App = () => {
 	return (
 		<>
-			<TopNavbar links={getNavbarLinks()} />;
-			<div style={{ marginTop: "42px", textAlign: "center" }}>
+			<NavbarTop links={getNavbarLinks()} />;
+			<div className="main">
 				<Outlet />
 			</div>
 		</>

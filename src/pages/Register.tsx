@@ -1,12 +1,11 @@
-import Button from "react-bootstrap/Button";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { Col, Form, Row } from "react-bootstrap";
-import NavbarBottom from "./../components/NavbarBottom";
-import { FieldValues, useForm } from "react-hook-form";
+import { FormEvent, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import NavbarBottom from "../components/NavbarBottom";
 import { z } from "zod";
+import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -28,7 +27,11 @@ const schema = z.object({
 			},
 			{ message: "Must be a valid email" }
 		),
-	password: z
+	address: z.string().min(1, { message: "Shipping Address is required" }),
+	password1: z
+		.string()
+		.min(6, { message: "Password contains at least 6 characters!" }),
+	password2: z
 		.string()
 		.min(6, { message: "Password contains at least 6 characters!" }),
 });
@@ -36,7 +39,7 @@ const schema = z.object({
 //Interface
 type FormData = z.infer<typeof schema>;
 
-const Login = () => {
+const Register = () => {
 	const [serviceError, setServiceError] = useState("");
 
 	const navigate = useNavigate();
@@ -55,6 +58,10 @@ const Login = () => {
 
 	const onSubmit = (data: FieldValues) => {
 		console.log(data);
+
+		if (data.password1 !== data.password2)
+			setServiceError("Passwords doesn't match!");
+
 		// Log the user in
 		// navigate("/");
 	};
@@ -63,9 +70,9 @@ const Login = () => {
 		<>
 			<section className="text-light d-flex flex-column justify-content-center align-items-center login-form__container mb-5">
 				<div className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark">
-					<h2 className="text-center mb-3">LOGIN</h2>
+					<h3 className="text-center mb-3 fs-4">CREATE AN ACCOUNT</h3>
 					{serviceError && (
-						<p className="text-danger mb-1 text-center">{serviceError}</p>
+						<p className="text-danger mb-0 text-center">{serviceError}</p>
 					)}
 					<Form
 						onSubmit={handleSubmit((data) => {
@@ -77,55 +84,55 @@ const Login = () => {
 							<Form.Label>Email or Phone</Form.Label>
 							<Form.Control
 								{...register("contactInfo")}
-								type="text"
-								placeholder="Email or Phone"
+								placeholder="Enter your email or phone"
 							/>
-							{errors.contactInfo && (
+							{errors.contactInfo ? (
 								<p className="text-danger">{errors.contactInfo.message}</p>
+							) : (
+								<Form.Text className="text-muted">
+									We'll never share your Info with anyone else.
+								</Form.Text>
 							)}
 						</Form.Group>
-						<Form.Group className="mb-3" controlId="passwordField">
+
+						<Form.Group className="mb-3" controlId="addressField">
+							<Form.Label>Shipping Address</Form.Label>
+							<Form.Control
+								{...register("address")}
+								placeholder="Enter your address"
+							/>
+							{errors.address && (
+								<p className="text-danger">{errors.address.message}</p>
+							)}
+						</Form.Group>
+
+						<Form.Group className="mb-3" controlId="passwordField1">
 							<Form.Label>Password</Form.Label>
 							<Form.Control
-								{...register("password")}
+								{...register("password1")}
 								type="password"
-								placeholder="Password"
+								placeholder="Enter a password"
 							/>
-							{errors.password && (
-								<p className="text-danger">{errors.password.message}</p>
+							{errors.password1 && (
+								<p className="text-danger">{errors.password1.message}</p>
 							)}
 						</Form.Group>
-						<Row>
-							<Col>
-								<Form.Group
-									className="mb-3 mx-auto"
-									controlId="rememberMe"
-									aria-checked>
-									<Form.Check
-										type="checkbox"
-										label="Remember Me"
-										className="mx-auto text-nowrap"
-										defaultChecked={true}
-										disabled={true}
-									/>
-								</Form.Group>
-							</Col>
-							<Col>
-								<Link to={""} className="disabled">
-									Forgot password?
-								</Link>
-							</Col>
-						</Row>
-						<div className="d-grid gap-4 d-block">
-							<Button variant="primary" type="submit" size="lg">
-								Login
-							</Button>
-							<Link
-								className="btn btn-outline-info btn-lg d-block"
-								to="/register">
-								Create account
-							</Link>
-						</div>
+
+						<Form.Group className="mb-3" controlId="passwordField2">
+							<Form.Label>Confirm Password</Form.Label>
+							<Form.Control
+								{...register("password2")}
+								type="password"
+								placeholder="Re-enter your password"
+							/>
+							{errors.password2 && (
+								<p className="text-danger">{errors.password2.message}</p>
+							)}
+						</Form.Group>
+
+						<Button variant="primary" type="submit" className="text-nowrap">
+							Create account
+						</Button>
 					</Form>
 				</div>
 			</section>
@@ -134,4 +141,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default Register;

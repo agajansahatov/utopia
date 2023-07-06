@@ -16,7 +16,7 @@ interface Props {
 	links: NavbarLink[];
 }
 
-const TopNavbar = ({ links }: Props) => {
+const NavbarTop = ({ links }: Props) => {
 	const { logo, name: appName } = getBrand();
 	const { user } = useAuth();
 
@@ -50,7 +50,7 @@ const TopNavbar = ({ links }: Props) => {
 	};
 	return (
 		<Navbar
-			className="bg-body-tertiary px-2 px-md-4"
+			className="bg-dark px-2 px-md-4"
 			bg="dark"
 			data-bs-theme="dark"
 			fixed="top"
@@ -72,4 +72,4 @@ const TopNavbar = ({ links }: Props) => {
 	);
 };
 
-export default TopNavbar;
+export default NavbarTop;
