@@ -7,6 +7,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import axios from "axios";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -39,9 +40,7 @@ type FormData = z.infer<typeof schema>;
 const Login = () => {
 	const [serviceError, setServiceError] = useState("");
 
-	const navigate = useNavigate();
-
-	const { user } = useAuth();
+	const user = useAuth();
 	if (user) {
 		return <Navigate to="/" />;
 	}
@@ -54,9 +53,29 @@ const Login = () => {
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
 	const onSubmit = (data: FieldValues) => {
-		console.log(data);
-		// Log the user in
-		// navigate("/");
+		axios
+			.post("http://localhost:8080/auth", {
+				contact: data.contactInfo,
+				password: data.password,
+			})
+			.then((res) => {
+				const data = res.data;
+				if (data.contact) {
+					localStorage.setItem("user", JSON.stringify(res.data));
+					window.location.pathname = "/";
+				} else {
+					localStorage.removeItem("user");
+					setServiceError("Wrong Credentials!");
+				}
+			})
+			.catch((e) => {
+				localStorage.removeItem("user");
+				if (e.response && e.response.status === 400) {
+					setServiceError("Wrong Credentials!");
+				} else {
+					setServiceError(e.message);
+				}
+			});
 	};
 
 	return (

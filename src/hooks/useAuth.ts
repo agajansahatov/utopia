@@ -1,9 +1,11 @@
-// const useAuth = () => {
-// 	return {
-// 		user: { id: 1, name: "Agajan" },
-// 	};
-// };
+const useAuth = () => {
+	const s = localStorage.getItem("user");
 
-const useAuth = () => ({ user: null });
+	if (s == null || s == "null") return null;
+
+	const user = JSON.parse(s);
+	if (user.contact) return user;
+	else return null;
+};
 
 export default useAuth;

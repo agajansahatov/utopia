@@ -28,6 +28,7 @@ const router = createBrowserRouter([
 			{ path: "history", element: <History /> },
 			{ path: "balance", element: <Balance /> },
 			{ path: "account", element: <Account /> },
+			{ path: "products/add", element: <Account /> },
 		],
 	},
 ]);

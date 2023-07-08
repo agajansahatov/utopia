@@ -19,3 +19,38 @@
 		min-width: 375px;
 	}
 }
+
+.sidebar {
+	position: fixed;
+	height: 100vh;
+	z-index: 1;
+	margin-top: -1px;
+}
+
+.sidebar__link {
+	padding: 13px 100px 13px 27px;
+}
+
+/* .sidebar .active {
+	background-color: #2b3034;
+} */
+
+.footer__brand {
+	width: 100%;
+	position: absolute;
+	bottom: 90px;
+}
+
+.products-list-field {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+}
+
+.card-img-top {
+	height: 12rem;
+	width: auto;
+}
+
+.logo {
+	border-radius: 25%;
+}

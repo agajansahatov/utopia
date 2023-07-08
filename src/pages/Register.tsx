@@ -1,11 +1,13 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import NavbarBottom from "../components/NavbarBottom";
 import { z } from "zod";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { User } from "./Account";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -42,9 +44,7 @@ type FormData = z.infer<typeof schema>;
 const Register = () => {
 	const [serviceError, setServiceError] = useState("");
 
-	const navigate = useNavigate();
-
-	const { user } = useAuth();
+	const user = useAuth();
 	if (user) {
 		return <Navigate to="/" />;
 	}
@@ -57,13 +57,31 @@ const Register = () => {
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
 	const onSubmit = (data: FieldValues) => {
-		console.log(data);
-
-		if (data.password1 !== data.password2)
+		if (data.password1 !== data.password2) {
 			setServiceError("Passwords doesn't match!");
+			return;
+		}
 
-		// Log the user in
-		// navigate("/");
+		axios
+			.post("http://localhost:8080/users", {
+				contact: data.contactInfo,
+				password: data.password1,
+				address: data.address,
+			})
+			.then((res) => {
+				const data: User = res.data;
+				if (data.contact) {
+					localStorage.setItem("user", JSON.stringify(res.data));
+					window.location.pathname = "/";
+				} else {
+					localStorage.removeItem("user");
+					setServiceError("User already exists!");
+				}
+			})
+			.catch((e) => {
+				localStorage.removeItem("user");
+				setServiceError(e);
+			});
 	};
 
 	return (

@@ -4,6 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { NavLink } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { User } from "./../pages/Account";
 
 interface NavbarLink {
 	id: number;
@@ -18,7 +19,10 @@ interface Props {
 
 const NavbarTop = ({ links }: Props) => {
 	const { logo, name: appName } = getBrand();
-	const { user } = useAuth();
+
+	const user: User = useAuth();
+
+	if (user !== null && !user.name) user.name = "Anonymous User";
 
 	const getRelatedLinks = (auth: boolean) => {
 		if (auth) {
@@ -30,7 +34,7 @@ const NavbarTop = ({ links }: Props) => {
 							to={link.url}
 							className="mx-2"
 							key={link.id.toString()}>
-							{link.label}
+							{link.label === "Account" ? user.name : link.label}
 						</Nav.Link>
 					)
 			);
@@ -57,7 +61,7 @@ const NavbarTop = ({ links }: Props) => {
 			expand="md">
 			<Navbar.Brand as={NavLink} to="/">
 				<img
-					className="d-inline-block align-middle"
+					className="d-inline-block align-middle logo"
 					src={logo}
 					height="40"
 					alt=""
@@ -66,7 +70,7 @@ const NavbarTop = ({ links }: Props) => {
 			</Navbar.Brand>
 			<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 			<Navbar.Collapse id="responsive-navbar-nav">
-				<Nav className="ms-auto fs-5">{getRelatedLinks(user !== null)}</Nav>
+				<Nav className="ms-auto fs-5">{getRelatedLinks(user != null)}</Nav>
 			</Navbar.Collapse>
 		</Navbar>
 	);

@@ -19,21 +19,15 @@ let navbarLinks = [
 	},
 	{
 		id: 3,
-		auth: 1,
-		label: "Account",
-		url: "/account",
-	},
-	{
-		id: 4,
 		auth: 0,
 		label: "Login",
 		url: "/login",
 	},
 	{
-		id: 5,
-		auth: 0,
-		label: "Settings",
-		url: "/settings",
+		id: 4,
+		auth: 1,
+		label: "Account",
+		url: "/account",
 	},
 ];
 
