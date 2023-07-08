@@ -1,4 +1,4 @@
-import { Container } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import NewProductForm from "../components/NewProductForm";
 import { useState } from "react";
@@ -13,6 +13,7 @@ export interface User {
 
 const Account = () => {
 	const [modalShow, setModalShow] = useState(false);
+
 	const onLogout = () => {
 		localStorage.removeItem("user");
 

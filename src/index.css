@@ -54,3 +54,8 @@
 .logo {
 	border-radius: 25%;
 }
+
+.toast {
+	right: 20px;
+	bottom: 25px;
+}

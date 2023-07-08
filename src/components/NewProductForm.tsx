@@ -1,4 +1,4 @@
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, ToastContainer } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { Form } from "react-bootstrap";
@@ -7,6 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import axios from "axios";
+import Toast from "react-bootstrap/Toast";
 
 const schema = z.object({
 	name: z.string().min(1),
@@ -25,6 +26,7 @@ interface Props {
 
 function NewProductForm(props: Props) {
 	const [serviceError, setServiceError] = useState("");
+	const [toaster, setToaster] = useState(false);
 
 	const user = useAuth();
 	if (!user) {
@@ -50,7 +52,9 @@ function NewProductForm(props: Props) {
 				popularity: "",
 			})
 			.then((res) => {
-				props.onHide();
+				if (res.data) {
+					setToaster(!toaster);
+				}
 			})
 			.catch((e) => {
 				setServiceError(e.message);
@@ -58,82 +62,96 @@ function NewProductForm(props: Props) {
 	};
 
 	return (
-		<Modal
-			{...props}
-			size="lg"
-			aria-labelledby="contained-modal-title-vcenter"
-			centered>
-			<Modal.Header closeButton>
-				<Modal.Title id="contained-modal-title-vcenter">
-					New Product
-				</Modal.Title>
-			</Modal.Header>
-			<Form
-				onSubmit={handleSubmit((data) => {
-					onSubmit(data);
-					reset();
-				})}
-				className="mb-2">
-				<Modal.Body className="d-flex justify-content-center">
-					<div className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark">
-						<h2 className="text-center mb-3">PRODUCT</h2>
-						{serviceError && (
-							<p className="text-danger mb-1 text-center">{serviceError}</p>
-						)}
+		<>
+			<Modal
+				{...props}
+				size="lg"
+				aria-labelledby="contained-modal-title-vcenter"
+				centered>
+				<Modal.Header closeButton>
+					<Modal.Title id="contained-modal-title-vcenter">
+						New Product
+					</Modal.Title>
+				</Modal.Header>
+				<Form
+					onSubmit={handleSubmit((data) => {
+						onSubmit(data);
+						reset();
+					})}
+					className="mb-2">
+					<Modal.Body className="d-flex justify-content-center">
+						<div className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark">
+							<h2 className="text-center mb-3">PRODUCT</h2>
+							{serviceError && (
+								<p className="text-danger mb-1 text-center">{serviceError}</p>
+							)}
 
-						<Form.Group className="mb-3" controlId="nameField">
-							<Form.Label>Product Name</Form.Label>
-							<Form.Control
-								{...register("name")}
-								type="text"
-								placeholder="Product Name"
-							/>
-							{errors.name && (
-								<p className="text-danger">{errors.name.message}</p>
-							)}
-						</Form.Group>
-						<Form.Group className="mb-3" controlId="descriptionField">
-							<Form.Label>Description</Form.Label>
-							<Form.Control
-								{...register("description")}
-								type="text"
-								placeholder="Description"
-							/>
-							{errors.description && (
-								<p className="text-danger">{errors.description.message}</p>
-							)}
-						</Form.Group>
-						<Form.Group className="mb-3" controlId="priceField">
-							<Form.Label>Price</Form.Label>
-							<Form.Control
-								{...register("price")}
-								type="text"
-								placeholder="Price"
-							/>
-							{errors.price && (
-								<p className="text-danger">{errors.price.message}</p>
-							)}
-						</Form.Group>
-						<Form.Group className="mb-3" controlId="categoryField">
-							<Form.Label>Category</Form.Label>
-							<Form.Control
-								{...register("category")}
-								type="text"
-								placeholder="Category"
-							/>
-							{errors.category && (
-								<p className="text-danger">{errors.category.message}</p>
-							)}
-						</Form.Group>
-					</div>
-				</Modal.Body>
-				<Modal.Footer>
-					<Button variant="primary" type="submit" className="px-5">
-						Add
-					</Button>
-				</Modal.Footer>
-			</Form>
-		</Modal>
+							<Form.Group className="mb-3" controlId="nameField">
+								<Form.Label>Product Name</Form.Label>
+								<Form.Control
+									{...register("name")}
+									type="text"
+									placeholder="Product Name"
+								/>
+								{errors.name && (
+									<p className="text-danger">{errors.name.message}</p>
+								)}
+							</Form.Group>
+							<Form.Group className="mb-3" controlId="descriptionField">
+								<Form.Label>Description</Form.Label>
+								<Form.Control
+									{...register("description")}
+									type="text"
+									placeholder="Description"
+								/>
+								{errors.description && (
+									<p className="text-danger">{errors.description.message}</p>
+								)}
+							</Form.Group>
+							<Form.Group className="mb-3" controlId="priceField">
+								<Form.Label>Price</Form.Label>
+								<Form.Control
+									{...register("price")}
+									type="text"
+									placeholder="Price"
+								/>
+								{errors.price && (
+									<p className="text-danger">{errors.price.message}</p>
+								)}
+							</Form.Group>
+							<Form.Group className="mb-3" controlId="categoryField">
+								<Form.Label>Category</Form.Label>
+								<Form.Control
+									{...register("category")}
+									type="text"
+									placeholder="Category"
+								/>
+								{errors.category && (
+									<p className="text-danger">{errors.category.message}</p>
+								)}
+							</Form.Group>
+						</div>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button variant="primary" type="submit" className="px-5">
+							Add
+						</Button>
+					</Modal.Footer>
+				</Form>
+				<Toast
+					delay={3000}
+					autohide
+					className="bg-success text-white position-fixed z-1 toast"
+					onClose={() => setToaster(!toaster)}
+					show={toaster}>
+					<Toast.Header>
+						<strong className="me-auto">Success</strong>
+						<small>Just now</small>
+					</Toast.Header>
+					<Toast.Body>A new product is added!</Toast.Body>
+				</Toast>
+			</Modal>
+		</>
 	);
 }
 
