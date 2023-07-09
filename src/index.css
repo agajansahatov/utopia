@@ -1,6 +1,9 @@
 .main {
 	margin-top: 2.7rem;
 }
+.content {
+	margin-left: 275px;
+}
 
 .login-form__container {
 	min-height: 77vh;
@@ -58,4 +61,10 @@
 .toast {
 	right: 20px;
 	bottom: 25px;
+}
+
+.shopping-basket {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
 }

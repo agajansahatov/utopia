@@ -80,7 +80,7 @@ const Register = () => {
 			})
 			.catch((e) => {
 				localStorage.removeItem("user");
-				setServiceError(e);
+				setServiceError(e.message);
 			});
 	};
 
@@ -95,7 +95,7 @@ const Register = () => {
 					<Form
 						onSubmit={handleSubmit((data) => {
 							onSubmit(data);
-							reset();
+							// reset();
 						})}
 						className="mb-2">
 						<Form.Group className="mb-3" controlId="contactInfoField">

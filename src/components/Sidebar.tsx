@@ -1,67 +1,38 @@
 import Nav from "react-bootstrap/Nav";
 import { getBrand } from "../config/Configuration";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
-// const sidebarLinks = [
-//     {
-//         id: 0,
-//         label: "Recommended",
-//     },
-//     {
-//         id: 1,
-//         label: "Clothes",
-//     },
-//     {
-//         id: 2,
-//         label: "Electronics",
-//     },
-//     {
-//         id: 3,
-//         label: "Last Seen",
-//     },
-//     {
-//         id: 4,
-//         label: "Last Seen",
-//     },
-// ];
+interface SidebarLink {
+	id: number;
+	label: ReactNode;
+}
 
-const Sidebar = () => {
+interface Props {
+	elements: SidebarLink[];
+	onClick: (id: number) => void;
+}
+
+const Sidebar = ({ elements, onClick }: Props) => {
 	const [active, setActive] = useState(0);
 	const { name: appName, copyrightDate } = getBrand();
 
+	const handleClick = (id: number) => {
+		onClick(id);
+		setActive(id);
+	};
+
 	return (
-		<aside className="sidebar bg-dark">
+		<aside className="sidebar bg-dark" style={{ minWidth: "250px" }}>
 			<Nav className="flex-column list-group rounded-0 mt-3">
-				<Nav.Link
-					className="list-group-item list-group-item-action border-0 sidebar__link"
-					active={active === 0}
-					onClick={() => setActive(0)}>
-					All Products
-				</Nav.Link>
-				<Nav.Link
-					className="list-group-item list-group-item-action border-0 sidebar__link"
-					active={active === 1}
-					onClick={() => setActive(1)}>
-					Books
-				</Nav.Link>
-				<Nav.Link
-					className="list-group-item list-group-item-action border-0 sidebar__link"
-					active={active === 2}
-					onClick={() => setActive(2)}>
-					Coffee Mugs
-				</Nav.Link>
-				<Nav.Link
-					className="list-group-item list-group-item-action border-0 sidebar__link"
-					active={active === 3}
-					onClick={() => setActive(3)}>
-					Luggage Tags
-				</Nav.Link>
-				<Nav.Link
-					className="list-group-item list-group-item-action border-0 sidebar__link"
-					active={active === 4}
-					onClick={() => setActive(4)}>
-					Mouse Pads
-				</Nav.Link>
+				{elements.map((element) => (
+					<Nav.Link
+						className="list-group-item list-group-item-action border-0 sidebar__link"
+						active={active === element.id}
+						onClick={() => handleClick(element.id)}
+						key={element.id}>
+						{element.label}
+					</Nav.Link>
+				))}
 			</Nav>
 			<footer className="d-block text-center footer__brand">
 				{appName} &copy; {copyrightDate} <br /> All Rights Reserved
