@@ -2,7 +2,7 @@ let navbarLinks = [
 	{
 		id: 0,
 		auth: 0,
-		label: "Home",
+		label: "Products",
 		url: "/",
 	},
 	{
@@ -13,18 +13,12 @@ let navbarLinks = [
 	},
 	{
 		id: 2,
-		auth: 1,
-		label: "Balance",
-		url: "/balance",
-	},
-	{
-		id: 3,
 		auth: 0,
 		label: "Login",
 		url: "/login",
 	},
 	{
-		id: 4,
+		id: 3,
 		auth: 1,
 		label: "Account",
 		url: "/account",

@@ -10,6 +10,7 @@ import axios from "axios";
 import Toast from "react-bootstrap/Toast";
 
 const schema = z.object({
+	image: z.any(),
 	name: z.string().min(1),
 	description: z.string().min(1),
 	price: z.string().min(1),
@@ -19,12 +20,7 @@ const schema = z.object({
 //Interface
 type FormData = z.infer<typeof schema>;
 
-interface Props {
-	show: boolean;
-	onHide: () => boolean;
-}
-
-function NewProductForm(props: Props) {
+const NewProductForm = () => {
 	const [serviceError, setServiceError] = useState("");
 	const [toaster, setToaster] = useState(false);
 
@@ -42,7 +38,7 @@ function NewProductForm(props: Props) {
 
 	const onSubmit = (data: FieldValues) => {
 		axios
-			.post("http://localhost:8080/products", {
+			.post("http://192.168.31.8:8080/products", {
 				name: data.name,
 				image: "assets/products/product1.webp",
 				description: data.description,
@@ -63,85 +59,86 @@ function NewProductForm(props: Props) {
 
 	return (
 		<>
-			<Modal
-				{...props}
-				size="lg"
-				aria-labelledby="contained-modal-title-vcenter"
-				centered>
-				<Modal.Header closeButton>
-					<Modal.Title id="contained-modal-title-vcenter">
-						New Product
-					</Modal.Title>
-				</Modal.Header>
-				<Form
-					onSubmit={handleSubmit((data) => {
-						onSubmit(data);
-						reset();
-					})}
-					className="mb-2">
-					<Modal.Body className="d-flex justify-content-center">
-						<div className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark">
-							<h2 className="text-center mb-3">PRODUCT</h2>
-							{serviceError && (
-								<p className="text-danger mb-1 text-center">{serviceError}</p>
-							)}
+			<Form
+				onSubmit={handleSubmit((data) => {
+					onSubmit(data);
+					// reset();
+				})}
+				className="mb-2">
+				<div className="d-flex justify-content-center">
+					<div
+						className="p-5 mx-2 mt-2 mb-3 rounded bg-dark"
+						style={{ minWidth: "500px" }}>
+						<h2 className="text-center mb-3">NEW PRODUCT</h2>
+						{serviceError && (
+							<p className="text-danger mb-1 text-center">{serviceError}</p>
+						)}
 
-							<Form.Group className="mb-3" controlId="nameField">
-								<Form.Label>Product Name</Form.Label>
-								<Form.Control
-									{...register("name")}
-									type="text"
-									placeholder="Product Name"
-								/>
-								{errors.name && (
-									<p className="text-danger">{errors.name.message}</p>
-								)}
-							</Form.Group>
-							<Form.Group className="mb-3" controlId="descriptionField">
-								<Form.Label>Description</Form.Label>
-								<Form.Control
-									{...register("description")}
-									type="text"
-									placeholder="Description"
-								/>
-								{errors.description && (
-									<p className="text-danger">{errors.description.message}</p>
-								)}
-							</Form.Group>
-							<Form.Group className="mb-3" controlId="priceField">
-								<Form.Label>Price</Form.Label>
-								<Form.Control
-									{...register("price")}
-									type="text"
-									placeholder="Price"
-								/>
-								{errors.price && (
-									<p className="text-danger">{errors.price.message}</p>
-								)}
-							</Form.Group>
-							<Form.Group className="mb-3" controlId="categoryField">
-								<Form.Label>Category</Form.Label>
-								<Form.Control
-									{...register("category")}
-									type="text"
-									placeholder="Category"
-								/>
-								{errors.category && (
-									<p className="text-danger">{errors.category.message}</p>
-								)}
-							</Form.Group>
+						<Form.Group className="mb-3" controlId="imageField">
+							<Form.Label>Image</Form.Label>
+							<Form.Control {...register("image")} type="file" />
+						</Form.Group>
+
+						<Form.Group className="mb-3" controlId="nameField">
+							<Form.Label>Product Name</Form.Label>
+							<Form.Control
+								{...register("name")}
+								type="text"
+								placeholder="Product Name"
+							/>
+							{errors.name && (
+								<p className="text-danger">{errors.name.message}</p>
+							)}
+						</Form.Group>
+						<Form.Group className="mb-3" controlId="descriptionField">
+							<Form.Label>Description</Form.Label>
+							<Form.Control
+								{...register("description")}
+								type="text"
+								placeholder="Description"
+							/>
+							{errors.description && (
+								<p className="text-danger">{errors.description.message}</p>
+							)}
+						</Form.Group>
+						<Form.Group className="mb-3" controlId="priceField">
+							<Form.Label>Price</Form.Label>
+							<Form.Control
+								{...register("price")}
+								type="text"
+								placeholder="Price"
+							/>
+							{errors.price && (
+								<p className="text-danger">{errors.price.message}</p>
+							)}
+						</Form.Group>
+						<Form.Group className="mb-3" controlId="categoryField">
+							<Form.Label>Category</Form.Label>
+							<Form.Control
+								{...register("category")}
+								type="text"
+								placeholder="Category"
+							/>
+							{errors.category && (
+								<p className="text-danger">{errors.category.message}</p>
+							)}
+						</Form.Group>
+						<div className="d-flex justify-content-end">
+							<Button variant="primary" type="submit" className="px-5 ps-auto">
+								Add
+							</Button>
 						</div>
-					</Modal.Body>
-					<Modal.Footer>
-						<Button variant="primary" type="submit" className="px-5">
-							Add
-						</Button>
-					</Modal.Footer>
-				</Form>
+					</div>
+				</div>
+			</Form>
+			<ToastContainer
+				className="p-3 z-1 position-fixed "
+				position="top-end"
+				style={{ width: "240px", marginTop: "75px" }}>
 				<Toast
 					delay={3000}
 					autohide
-					className="bg-success text-white position-fixed z-1 toast"
+					className="bg-success text-white z-1 toast"
 					onClose={() => setToaster(!toaster)}
 					show={toaster}>
 					<Toast.Header>
@@ -150,9 +147,9 @@ function NewProductForm(props: Props) {
 					</Toast.Header>
 					<Toast.Body>A new product is added!</Toast.Body>
 				</Toast>
-			</Modal>
+			</ToastContainer>
 		</>
 	);
-}
+};
 
 export default NewProductForm;

@@ -1,7 +1,8 @@
-import Button from "react-bootstrap/Button";
-import NewProductForm from "../components/NewProductForm";
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import Profile from "../sections/Profile";
+import Admin from "../sections/Admin";
+import useAuth from "../hooks/useAuth";
 export interface User {
 	id: number;
 	name: string;
@@ -11,63 +12,64 @@ export interface User {
 	address: string;
 }
 
-const sidebarLinks = [
+let sidebarLinks = [
 	{
 		id: 0,
 		label: "Profile",
 	},
+
 	{
 		id: 1,
-		label: "Admin",
+		label: "Balance",
 	},
 	{
 		id: 2,
-		label: "Settings",
-	},
-	{
-		id: 3,
-		label: "Fruits",
-	},
-	{
-		id: 4,
-		label: "Cars",
+		label: "Logout",
 	},
 ];
 
 const Account = () => {
-	const [modalShow, setModalShow] = useState(false);
+	const [content, setContent] = useState(0);
 
-	const onLogout = () => {
-		localStorage.removeItem("user");
+	const user: User = useAuth();
+	if (user.id === 1) {
+		sidebarLinks = [
+			{
+				id: 0,
+				label: "Admin",
+			},
+			{
+				id: 1,
+				label: "Profile",
+			},
 
-		window.location.pathname = "/login";
+			{
+				id: 2,
+				label: "Balance",
+			},
+			{
+				id: 3,
+				label: "Logout",
+			},
+		];
+	}
+
+	const onContentChange = (id: number) => {
+		if (id === 3) {
+			//Logout
+			localStorage.removeItem("user");
+			window.location.pathname = "/login";
+		} else {
+			setContent(id);
+		}
 	};
-	const onContentChange = () => {};
 
 	return (
 		<>
 			<Sidebar elements={sidebarLinks} onClick={onContentChange} />
 			<main className="content">
-				<Button
-					variant="danger"
-					size="lg"
-					className="my-3 mx-5"
-					onClick={onLogout}>
-					Logout
-				</Button>
-				<br />
-				<div>
-					<Button variant="primary" onClick={() => setModalShow(true)}>
-						Add Product
-					</Button>
-					<NewProductForm
-						show={modalShow}
-						onHide={() => {
-							setModalShow(false);
-							return modalShow;
-						}}
-					/>
-				</div>
+				{content == 0 && <Admin />}
+				{content == 1 && <Profile />}
 			</main>
 		</>
 	);

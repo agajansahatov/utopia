@@ -1,22 +1,18 @@
-import { Navigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import NavbarBottom from "../components/NavbarBottom";
-import { z } from "zod";
 import { FieldValues, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { User } from "./Account";
+import { z } from "zod";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
 };
 
 const schema = z.object({
+	name: z.string().min(3),
 	contactInfo: z
 		.string()
-		.min(8, { message: "Contact Info contains at least 8 characters!" })
+		.min(8)
 		.refine(
 			(value) => {
 				if (isPhoneNumber(value)) {
@@ -29,25 +25,17 @@ const schema = z.object({
 			},
 			{ message: "Must be a valid email" }
 		),
-	address: z.string().min(1, { message: "Shipping Address is required" }),
-	password1: z
-		.string()
-		.min(6, { message: "Password contains at least 6 characters!" }),
-	password2: z
-		.string()
-		.min(6, { message: "Password contains at least 6 characters!" }),
+	image: z.any(),
+	address: z.string().min(1),
+	password1: z.string().min(6),
+	password2: z.string().min(6),
 });
 
 //Interface
 type FormData = z.infer<typeof schema>;
 
-const Register = () => {
+const Profile = () => {
 	const [serviceError, setServiceError] = useState("");
-
-	const user = useAuth();
-	if (user) {
-		return <Navigate to="/" />;
-	}
 
 	const {
 		register,
@@ -61,56 +49,48 @@ const Register = () => {
 			setServiceError("Passwords doesn't match!");
 			return;
 		}
-
-		axios
-			.post("http://192.168.31.8:8080/users", {
-				contact: data.contactInfo,
-				password: data.password1,
-				address: data.address,
-			})
-			.then((res) => {
-				const data: User = res.data;
-				if (data.contact) {
-					localStorage.setItem("user", JSON.stringify(res.data));
-					window.location.pathname = "/";
-				} else {
-					localStorage.removeItem("user");
-					setServiceError("User already exists!");
-				}
-			})
-			.catch((e) => {
-				localStorage.removeItem("user");
-				setServiceError(e.message);
-			});
+		console.log(data.image);
 	};
 
 	return (
 		<>
 			<section className="text-light d-flex flex-column justify-content-center align-items-center login-form__container mb-5">
 				<div className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark">
-					<h3 className="text-center mb-3 fs-4">CREATE AN ACCOUNT</h3>
+					<h3 className="text-center mb-3 fs-4">EDIT YOUR PROFILE</h3>
 					{serviceError && (
 						<p className="text-danger mb-0 text-center">{serviceError}</p>
 					)}
 					<Form
 						onSubmit={handleSubmit((data) => {
 							onSubmit(data);
-							reset();
+							// reset();
 						})}
 						className="mb-2">
+						<Form.Group className="mb-3" controlId="nameField">
+							<Form.Label>Name</Form.Label>
+							<Form.Control
+								{...register("name")}
+								placeholder="Enter Your Name"
+							/>
+							{errors.name && (
+								<p className="text-danger">{errors.name.message}</p>
+							)}
+						</Form.Group>
+
 						<Form.Group className="mb-3" controlId="contactInfoField">
 							<Form.Label>Email or Phone</Form.Label>
 							<Form.Control
 								{...register("contactInfo")}
 								placeholder="Enter your email or phone"
 							/>
-							{errors.contactInfo ? (
+							{errors.contactInfo && (
 								<p className="text-danger">{errors.contactInfo.message}</p>
-							) : (
-								<Form.Text className="text-muted">
-									We'll never share your Info with anyone else.
-								</Form.Text>
 							)}
+						</Form.Group>
+
+						<Form.Group className="mb-3" controlId="imageField">
+							<Form.Label>Image</Form.Label>
+							<Form.Control {...register("image")} type="file" />
 						</Form.Group>
 
 						<Form.Group className="mb-3" controlId="addressField">
@@ -149,14 +129,13 @@ const Register = () => {
 						</Form.Group>
 
 						<Button variant="primary" type="submit" className="text-nowrap">
-							Create account
+							SAVE
 						</Button>
 					</Form>
 				</div>
 			</section>
-			<NavbarBottom />
 		</>
 	);
 };
 
-export default Register;
+export default Profile;

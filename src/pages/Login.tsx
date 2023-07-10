@@ -54,7 +54,7 @@ const Login = () => {
 
 	const onSubmit = (data: FieldValues) => {
 		axios
-			.post("http://localhost:8080/auth", {
+			.post("http://192.168.31.8:8080/auth", {
 				contact: data.contactInfo,
 				password: data.password,
 			})
