@@ -1,18 +1,12 @@
 import Button from "react-bootstrap/Button";
-
-export interface IProduct {
-	id: number;
-	image: string;
-	description: string;
-	price: number;
-	name: string;
-}
+import { Product } from "../interfaces/Product";
 
 interface Props {
-	product: IProduct;
+	product: Product;
+	onAddToCart: (product: Product) => void;
 }
 
-const Product = ({ product }: Props) => {
+const ProductCard = ({ product, onAddToCart }: Props) => {
 	return (
 		<div className="card mb-4" style={{ width: "23rem" }}>
 			<img src={product.image} className="card-img-top" alt="Product image" />
@@ -21,11 +15,13 @@ const Product = ({ product }: Props) => {
 				<p className="card-text">{product.description}</p>
 				<div className="d-flex align-items-center justify-content-between">
 					<p className="text-light mt-2">${product.price}</p>
-					<Button variant="primary">Add to cart</Button>
+					<Button variant="primary" onClick={() => onAddToCart(product)}>
+						Add to cart
+					</Button>
 				</div>
 			</div>
 		</div>
 	);
 };
 
-export default Product;
+export default ProductCard;

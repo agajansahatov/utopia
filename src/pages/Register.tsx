@@ -7,7 +7,7 @@ import { z } from "zod";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { User } from "./Account";
+import { User } from "../interfaces/User";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);

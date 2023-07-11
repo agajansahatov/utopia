@@ -3,14 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Profile from "../sections/Profile";
 import Admin from "../sections/Admin";
 import useAuth from "../hooks/useAuth";
-export interface User {
-	id: number;
-	name: string;
-	contact: string;
-	image: string;
-	password: string;
-	address: string;
-}
+import { User } from "./../interfaces/User";
 
 let sidebarLinks = [
 	{
@@ -31,8 +24,9 @@ let sidebarLinks = [
 const Account = () => {
 	const [content, setContent] = useState(0);
 
-	const user: User = useAuth();
-	if (user.id === 1) {
+	let logoutId = 2;
+	const user: User | null = useAuth();
+	if (user && user.id === 1) {
 		sidebarLinks = [
 			{
 				id: 0,
@@ -52,10 +46,12 @@ const Account = () => {
 				label: "Logout",
 			},
 		];
+
+		logoutId = 3;
 	}
 
 	const onContentChange = (id: number) => {
-		if (id === 3) {
+		if (id === logoutId) {
 			//Logout
 			localStorage.removeItem("user");
 			window.location.pathname = "/login";

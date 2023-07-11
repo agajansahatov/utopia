@@ -140,7 +140,8 @@ const NewProductForm = () => {
 					autohide
 					className="bg-success text-white z-1 toast"
 					onClose={() => setToaster(!toaster)}
-					show={toaster}>
+					show={toaster}
+					style={{ boxShadow: "0 0 10px 10px #fff" }}>
 					<Toast.Header>
 						<strong className="me-auto">Success</strong>
 						<small>Just now</small>

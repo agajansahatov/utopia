@@ -1,10 +1,12 @@
-import Product, { IProduct } from "./Product";
+import { Product } from "../interfaces/Product";
+import ProductCard from "./ProductCard";
 
 interface Props {
-	products: IProduct[];
+	products: Product[];
+	onAddToCart: (product: Product) => void;
 }
 
-const ProductList = ({ products }: Props) => {
+const ProductList = ({ products, onAddToCart }: Props) => {
 	if (products.length == 0)
 		return (
 			<p className="text-danger">
@@ -14,7 +16,11 @@ const ProductList = ({ products }: Props) => {
 	return (
 		<div className="products-list-field">
 			{products.map((product) => (
-				<Product product={product} key={product.id} />
+				<ProductCard
+					product={product}
+					key={product.id}
+					onAddToCart={(product) => onAddToCart(product)}
+				/>
 			))}
 		</div>
 	);
