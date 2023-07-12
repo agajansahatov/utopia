@@ -1,6 +1,15 @@
-import { Button, Table } from "react-bootstrap";
 import Sidebar from "../components/Sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import OrderList from "../sections/OrderList";
+import { useOutletContext } from "react-router-dom";
+import { ContextProducts, ContextType } from "../App";
+import { User } from "../interfaces/User";
+import axios from "axios";
+import useAuth from "../hooks/useAuth";
+import { PurchasedProduct } from "../interfaces/PurchasedProduct";
+import { Product } from "../interfaces/Product";
+import Favourites from "../sections/Favourites";
+import WatchList from "../sections/WatchList";
 
 const sidebarLinks = [
 	{
@@ -19,67 +28,52 @@ const sidebarLinks = [
 
 const History = () => {
 	const [content, setContent] = useState(0);
-	const onContentChange = () => {};
+	const [orders, setOrders] = useState<PurchasedProduct[]>([]);
+	const { products } = useOutletContext<ContextProducts>();
+
+	const user: User | null = useAuth();
+	if (!user) return;
+
+	useEffect(() => {
+		axios
+			.post("http://192.168.31.8:8080/products/purchased/all", user)
+			.then((res) => {
+				if (res.data !== null) {
+					const data: PurchasedProduct[] = res.data;
+					setOrders(getOrders(products, data));
+				}
+			});
+	}, []);
+
+	const onContentChange = (id: number) => {
+		setContent(id);
+	};
+
 	return (
 		<>
 			<Sidebar elements={sidebarLinks} onClick={onContentChange} />
 			<main className="content">
-				<Table bordered hover variant="dark" className="pe-none">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Image</th>
-							<th>Name</th>
-							<th>Price</th>
-							<th>Quantity</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr className="pe-auto">
-							<td>1</td>
-							<td>
-								<img
-									src="assets/products/product3.webp"
-									style={{ width: "175px" }}
-								/>
-							</td>
-							<td>Otto</td>
-							<td>$10</td>
-							<td>5</td>
-							<td>Paid</td>
-						</tr>
-						<tr className="pe-auto">
-							<td>2</td>
-							<td>
-								<img
-									src="assets/products/product3.webp"
-									style={{ width: "175px" }}
-								/>
-							</td>
-							<td>Thornton</td>
-							<td>$15</td>
-							<td>5</td>
-							<td>Paid</td>
-						</tr>
-						<tr className="pe-auto">
-							<td>3</td>
-							<td>
-								<img
-									src="assets/products/product3.webp"
-									style={{ width: "175px" }}
-								/>
-							</td>
-							<td>Thornton</td>
-							<td>$8</td>
-							<td>5</td>
-							<td>Paid</td>
-						</tr>
-					</tbody>
-				</Table>
+				{content == 0 && <OrderList orders={orders} />}
+				{content == 1 && <Favourites />}
+				{content == 2 && <WatchList />}
 			</main>
 		</>
 	);
 };
 
 export default History;
+
+const getOrders = (
+	products: Product[],
+	purchasedProducts: PurchasedProduct[]
+) => {
+	purchasedProducts.forEach((p) => {
+		const product = products.find((product) => product.id === p.product);
+		if (product) {
+			p.image = product.image;
+			p.name = product.name;
+			p.price = product.price;
+		}
+	});
+	return purchasedProducts;
+};

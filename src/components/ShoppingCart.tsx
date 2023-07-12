@@ -48,6 +48,21 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 				onToggle();
 				setToasterSuccess(!toasterSuccess);
 				onClear();
+				axios
+					.post("http://192.168.31.8:8080/auth", user)
+					.then((res) => {
+						const data = res.data;
+						if (data.contact) {
+							localStorage.setItem("user", JSON.stringify(res.data));
+						} else {
+							localStorage.removeItem("user");
+							window.location.pathname = "/login";
+						}
+					})
+					.catch(() => {
+						localStorage.removeItem("user");
+						window.location.pathname = "/login";
+					});
 			})
 			.catch((e: AxiosError) => {
 				setServiceError(e.message);
@@ -88,7 +103,11 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 									<tr className="pe-auto" key={p.id}>
 										<td>1</td>
 										<td>
-											<img src={p.image} style={{ maxWidth: "175px" }} />
+											<img
+												src={p.image}
+												style={{ maxWidth: "175px", maxHeight: "150px" }}
+												className="object-fit-contain"
+											/>
 										</td>
 										<td>{p.name}</td>
 										<td>${p.price}</td>

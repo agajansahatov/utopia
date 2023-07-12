@@ -4,7 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { NavLink } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { User } from "./../pages/Account";
+import { User } from "../interfaces/User";
 
 interface NavbarLink {
 	id: number;
@@ -20,9 +20,9 @@ interface Props {
 const NavbarTop = ({ links }: Props) => {
 	const { logo, name: appName } = getBrand();
 
-	const user: User = useAuth();
-
-	if (user !== null && !user.name) user.name = "Anonymous User";
+	const user: User | null = useAuth();
+	let username = "Anonymous User";
+	if (user !== null && user.name) username = user.name;
 
 	const getRelatedLinks = (auth: boolean) => {
 		if (auth) {
@@ -34,7 +34,7 @@ const NavbarTop = ({ links }: Props) => {
 							to={link.url}
 							className="mx-2"
 							key={link.id.toString()}>
-							{link.label === "Account" ? user.name : link.label}
+							{link.label === "Account" ? username : link.label}
 						</Nav.Link>
 					)
 			);

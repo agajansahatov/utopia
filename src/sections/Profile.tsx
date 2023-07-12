@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
+import useAuth from "../hooks/useAuth";
+import { User } from "../interfaces/User";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -52,10 +54,16 @@ const Profile = () => {
 		console.log(data.image);
 	};
 
+	const user: User | null = useAuth();
+	if (!user) {
+		return;
+	}
 	return (
 		<>
 			<section className="text-light d-flex flex-column justify-content-center align-items-center login-form__container mb-5">
-				<div className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark">
+				<div
+					className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark"
+					style={{ minWidth: "700px" }}>
 					<h3 className="text-center mb-3 fs-4">EDIT YOUR PROFILE</h3>
 					{serviceError && (
 						<p className="text-danger mb-0 text-center">{serviceError}</p>
@@ -68,10 +76,7 @@ const Profile = () => {
 						className="mb-2">
 						<Form.Group className="mb-3" controlId="nameField">
 							<Form.Label>Name</Form.Label>
-							<Form.Control
-								{...register("name")}
-								placeholder="Enter Your Name"
-							/>
+							<Form.Control {...register("name")} placeholder={user.name} />
 							{errors.name && (
 								<p className="text-danger">{errors.name.message}</p>
 							)}
@@ -81,7 +86,7 @@ const Profile = () => {
 							<Form.Label>Email or Phone</Form.Label>
 							<Form.Control
 								{...register("contactInfo")}
-								placeholder="Enter your email or phone"
+								placeholder={user.contact}
 							/>
 							{errors.contactInfo && (
 								<p className="text-danger">{errors.contactInfo.message}</p>
@@ -97,7 +102,7 @@ const Profile = () => {
 							<Form.Label>Shipping Address</Form.Label>
 							<Form.Control
 								{...register("address")}
-								placeholder="Enter your address"
+								placeholder={user.address}
 							/>
 							{errors.address && (
 								<p className="text-danger">{errors.address.message}</p>
@@ -128,9 +133,11 @@ const Profile = () => {
 							)}
 						</Form.Group>
 
-						<Button variant="primary" type="submit" className="text-nowrap">
-							SAVE
-						</Button>
+						<div className="d-flex justify-content-end">
+							<Button variant="primary" type="submit" className="text-nowrap">
+								SAVE
+							</Button>
+						</div>
 					</Form>
 				</div>
 			</section>

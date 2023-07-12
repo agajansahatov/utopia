@@ -9,7 +9,11 @@ interface Props {
 const ProductCard = ({ product, onAddToCart }: Props) => {
 	return (
 		<div className="card mb-4" style={{ width: "23rem" }}>
-			<img src={product.image} className="card-img-top" alt="Product image" />
+			<img
+				src={product.image}
+				className="card-img-top object-fit-contain"
+				alt="Product image"
+			/>
 			<div className="card-body">
 				<h5 className="card-title">{product.name}</h5>
 				<p className="card-text">{product.description}</p>

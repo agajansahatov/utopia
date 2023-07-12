@@ -12,6 +12,10 @@ export interface ContextType {
 	products: Product[];
 }
 
+export interface ContextProducts {
+	products: Product[];
+}
+
 const App = () => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [shoppingCartList, setShoppingCartList] = useState<Product[]>([]);

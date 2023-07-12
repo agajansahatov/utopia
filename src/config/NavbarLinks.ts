@@ -2,7 +2,7 @@ let navbarLinks = [
 	{
 		id: 0,
 		auth: 0,
-		label: "Products",
+		label: "Home",
 		url: "/",
 	},
 	{

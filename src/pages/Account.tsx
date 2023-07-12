@@ -4,6 +4,7 @@ import Profile from "../sections/Profile";
 import Admin from "../sections/Admin";
 import useAuth from "../hooks/useAuth";
 import { User } from "./../interfaces/User";
+import Balance from "../sections/Balance";
 
 let sidebarLinks = [
 	{
@@ -63,10 +64,18 @@ const Account = () => {
 	return (
 		<>
 			<Sidebar elements={sidebarLinks} onClick={onContentChange} />
-			<main className="content">
-				{content == 0 && <Admin />}
-				{content == 1 && <Profile />}
-			</main>
+			{user && user.id === 1 ? (
+				<main className="content">
+					{content == 0 && <Admin />}
+					{content == 1 && <Profile />}
+					{content == 2 && <Balance />}
+				</main>
+			) : (
+				<main className="content">
+					{content == 0 && <Profile />}
+					{content == 1 && <Balance />}
+				</main>
+			)}
 		</>
 	);
 };
