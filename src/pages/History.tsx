@@ -36,7 +36,7 @@ const History = () => {
 
 	useEffect(() => {
 		axios
-			.post("http://192.168.31.8:8080/products/purchased/all", user)
+			.post("http://localhost:8080/products/purchased/all", user)
 			.then((res) => {
 				if (res.data !== null) {
 					const data: PurchasedProduct[] = res.data;

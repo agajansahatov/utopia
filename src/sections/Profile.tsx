@@ -5,6 +5,8 @@ import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import useAuth from "../hooks/useAuth";
 import { User } from "../interfaces/User";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -37,6 +39,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const Profile = () => {
+	const navigate = useNavigate();
 	const [serviceError, setServiceError] = useState("");
 
 	const {
@@ -46,18 +49,36 @@ const Profile = () => {
 		formState: { errors },
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
+	const user: User | null = useAuth();
+	if (!user) {
+		return;
+	}
+
 	const onSubmit = (data: FieldValues) => {
 		if (data.password1 !== data.password2) {
 			setServiceError("Passwords doesn't match!");
 			return;
 		}
-		console.log(data.image);
+		user.name = data.name;
+		user.address = data.address;
+		user.contact = data.contactInfo;
+		user.password = data.password1;
+
+		axios
+			.put("http://localhost:8080/users", user)
+			.then((res) => {
+				const data: User = res.data;
+				if (data.contact) {
+					localStorage.removeItem("user");
+					localStorage.setItem("user", JSON.stringify(res.data));
+					window.location.pathname = "/account";
+				}
+			})
+			.catch((e) => {
+				setServiceError(e.message);
+			});
 	};
 
-	const user: User | null = useAuth();
-	if (!user) {
-		return;
-	}
 	return (
 		<>
 			<section className="text-light d-flex flex-column justify-content-center align-items-center login-form__container mb-5">
@@ -71,7 +92,7 @@ const Profile = () => {
 					<Form
 						onSubmit={handleSubmit((data) => {
 							onSubmit(data);
-							// reset();
+							reset();
 						})}
 						className="mb-2">
 						<Form.Group className="mb-3" controlId="nameField">

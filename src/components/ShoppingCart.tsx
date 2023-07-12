@@ -36,10 +36,7 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 		});
 
 		axios
-			.post(
-				"http://192.168.31.8:8080/products/purchased/new",
-				purchasedProducts
-			)
+			.post("http://localhost:8080/products/purchased/new", purchasedProducts)
 			.then((res) => {
 				if (res.data == false) {
 					setServiceError("Bad Request!");
@@ -49,7 +46,7 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 				setToasterSuccess(!toasterSuccess);
 				onClear();
 				axios
-					.post("http://192.168.31.8:8080/auth", user)
+					.post("http://localhost:8080/auth", user)
 					.then((res) => {
 						const data = res.data;
 						if (data.contact) {
@@ -99,9 +96,9 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 								</tr>
 							</thead>
 							<tbody>
-								{purchasedProducts.map((p) => (
+								{purchasedProducts.map((p, i) => (
 									<tr className="pe-auto" key={p.id}>
-										<td>1</td>
+										<td>{i + 1}</td>
 										<td>
 											<img
 												src={p.image}

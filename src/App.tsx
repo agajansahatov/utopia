@@ -25,7 +25,7 @@ const App = () => {
 
 	useEffect(() => {
 		axios
-			.get("http://192.168.31.8:8080/products")
+			.get("http://localhost:8080/products")
 			.then((res) => {
 				setProducts(res.data);
 			})

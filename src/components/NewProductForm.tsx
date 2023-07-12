@@ -38,7 +38,7 @@ const NewProductForm = () => {
 
 	const onSubmit = (data: FieldValues) => {
 		axios
-			.post("http://192.168.31.8:8080/products", {
+			.post("http://localhost:8080/products", {
 				name: data.name,
 				image: "assets/products/product1.webp",
 				description: data.description,

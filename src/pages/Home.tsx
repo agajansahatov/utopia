@@ -18,11 +18,19 @@ const sidebarLinks = [
 	},
 	{
 		id: 3,
-		label: "Fruits",
+		label: "Furniture",
 	},
 	{
 		id: 4,
-		label: "Cars",
+		label: "Drinks",
+	},
+	{
+		id: 5,
+		label: "Books",
+	},
+	{
+		id: 6,
+		label: "Fruits",
 	},
 ];
 

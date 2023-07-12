@@ -63,7 +63,7 @@ const Register = () => {
 		}
 
 		axios
-			.post("http://192.168.31.8:8080/users", {
+			.post("http://localhost:8080/users", {
 				contact: data.contactInfo,
 				password: data.password1,
 				address: data.address,

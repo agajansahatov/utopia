@@ -54,7 +54,7 @@ const Login = () => {
 
 	const onSubmit = (data: FieldValues) => {
 		axios
-			.post("http://192.168.31.8:8080/auth", {
+			.post("http://localhost:8080/auth", {
 				contact: data.contactInfo,
 				password: data.password,
 			})
@@ -70,11 +70,7 @@ const Login = () => {
 			})
 			.catch((e) => {
 				localStorage.removeItem("user");
-				if (e.response && e.response.status === 400) {
-					setServiceError("Wrong Credentials!");
-				} else {
-					setServiceError(e.message);
-				}
+				setServiceError("Wrong Credentials!");
 			});
 	};
 
@@ -89,7 +85,7 @@ const Login = () => {
 					<Form
 						onSubmit={handleSubmit((data) => {
 							onSubmit(data);
-							reset();
+							// reset();
 						})}
 						className="mb-2">
 						<Form.Group className="mb-3" controlId="contactInfoField">
