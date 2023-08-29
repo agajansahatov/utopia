@@ -6,6 +6,7 @@ import ShoppingCart from "./components/ShoppingCart";
 import useAuth from "./hooks/useAuth";
 import axios from "axios";
 import { Product } from "./interfaces/Product";
+import { getBaseURL } from "./config/Configuration";
 
 export interface ContextType {
 	onAddToCart: (product: Product) => void;
@@ -25,7 +26,7 @@ const App = () => {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:8080/products")
+			.get(getBaseURL() + "products")
 			.then((res) => {
 				setProducts(res.data);
 			})

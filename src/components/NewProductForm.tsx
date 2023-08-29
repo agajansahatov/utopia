@@ -83,7 +83,7 @@ const NewProductForm = () => {
 			<Form
 				onSubmit={handleSubmit((data) => {
 					onSubmit(data);
-					// reset();
+					reset();
 				})}
 				className="mb-2"
 				encType="multipart/form-data">
