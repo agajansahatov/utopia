@@ -1,5 +1,6 @@
 import { Table } from "react-bootstrap";
 import { PurchasedProduct } from "../interfaces/PurchasedProduct";
+import { getProductImageURL } from "./../config/Configuration";
 
 interface Props {
 	orders: PurchasedProduct[];
@@ -35,7 +36,7 @@ const OrderList = ({ orders }: Props) => {
 							<td>{index + 1}</td>
 							<td>
 								<img
-									src={order.image}
+									src={getProductImageURL(order.image)}
 									style={{ width: "175px", maxHeight: "125px" }}
 									className="object-fit-contain"
 								/>

@@ -1,5 +1,6 @@
 import Button from "react-bootstrap/Button";
 import { Product } from "../interfaces/Product";
+import { getProductImageURL } from "../config/Configuration";
 
 interface Props {
 	product: Product;
@@ -10,7 +11,7 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
 	return (
 		<div className="card mb-4" style={{ width: "23rem" }}>
 			<img
-				src={product.image}
+				src={getProductImageURL(product.image)}
 				className="card-img-top object-fit-contain"
 				alt="Product image"
 			/>

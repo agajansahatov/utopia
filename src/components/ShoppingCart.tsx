@@ -13,6 +13,7 @@ import {
 import { PurchasedProduct } from "./../interfaces/PurchasedProduct";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
+import { getBaseURL, getProductImageURL } from "../config/Configuration";
 
 interface Props {
 	products: Product[];
@@ -36,7 +37,7 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 		});
 
 		axios
-			.post("http://localhost:8080/products/purchased/new", purchasedProducts)
+			.post(getBaseURL() + "products/purchased/new", purchasedProducts)
 			.then((res) => {
 				if (res.data == false) {
 					setServiceError("Bad Request!");
@@ -46,7 +47,7 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 				setToasterSuccess(!toasterSuccess);
 				onClear();
 				axios
-					.post("http://localhost:8080/auth", user)
+					.post(getBaseURL() + "auth", user)
 					.then((res) => {
 						const data = res.data;
 						if (data.contact) {
@@ -101,7 +102,7 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 										<td>{i + 1}</td>
 										<td>
 											<img
-												src={p.image}
+												src={getProductImageURL(p.image)}
 												style={{ maxWidth: "175px", maxHeight: "150px" }}
 												className="object-fit-contain"
 											/>
