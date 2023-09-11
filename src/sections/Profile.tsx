@@ -13,7 +13,7 @@ const isPhoneNumber = (val: string) => {
 };
 
 const schema = z.object({
-	name: z.string().min(3),
+	name: z.string().nullable(),
 	contactInfo: z
 		.string()
 		.min(8)
@@ -28,19 +28,24 @@ const schema = z.object({
 				}
 			},
 			{ message: "Must be a valid email" }
-		),
-	image: z.any(),
-	address: z.string().min(1),
-	password1: z.string().min(6),
-	password2: z.string().min(6),
+		)
+		.nullable(),
+	address: z.string().min(1).nullable(),
+	password1: z.string().min(6).nullable(),
+	password2: z.string().min(6).nullable(),
 });
 
 //Interface
 type FormData = z.infer<typeof schema>;
 
 const Profile = () => {
-	const navigate = useNavigate();
 	const [serviceError, setServiceError] = useState("");
+
+	const user: User | null = useAuth();
+	if (!user) {
+		return;
+	}
+	const [userFormInfo, setUserFormInfo] = useState<User>(user);
 
 	const {
 		register,
@@ -48,11 +53,6 @@ const Profile = () => {
 		reset,
 		formState: { errors },
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
-
-	const user: User | null = useAuth();
-	if (!user) {
-		return;
-	}
 
 	const onSubmit = (data: FieldValues) => {
 		if (data.password1 !== data.password2) {
@@ -97,7 +97,11 @@ const Profile = () => {
 						className="mb-2">
 						<Form.Group className="mb-3" controlId="nameField">
 							<Form.Label>Name</Form.Label>
-							<Form.Control {...register("name")} placeholder={user.name} />
+							<Form.Control
+								{...register("name")}
+								placeholder="Enter your name"
+								defaultValue={user.name}
+							/>
 							{errors.name && (
 								<p className="text-danger">{errors.name.message}</p>
 							)}
@@ -107,23 +111,20 @@ const Profile = () => {
 							<Form.Label>Email or Phone</Form.Label>
 							<Form.Control
 								{...register("contactInfo")}
-								placeholder={user.contact}
+								placeholder="Enter your contact information"
+								defaultValue={user.contact}
 							/>
 							{errors.contactInfo && (
 								<p className="text-danger">{errors.contactInfo.message}</p>
 							)}
 						</Form.Group>
 
-						<Form.Group className="mb-3" controlId="imageField">
-							<Form.Label>Image</Form.Label>
-							<Form.Control {...register("image")} type="file" />
-						</Form.Group>
-
 						<Form.Group className="mb-3" controlId="addressField">
 							<Form.Label>Shipping Address</Form.Label>
 							<Form.Control
 								{...register("address")}
-								placeholder={user.address}
+								placeholder="Enter your shipping address"
+								defaultValue={user.address}
 							/>
 							{errors.address && (
 								<p className="text-danger">{errors.address.message}</p>
@@ -136,6 +137,7 @@ const Profile = () => {
 								{...register("password1")}
 								type="password"
 								placeholder="Enter a password"
+								defaultValue={user.password}
 							/>
 							{errors.password1 && (
 								<p className="text-danger">{errors.password1.message}</p>
@@ -148,6 +150,7 @@ const Profile = () => {
 								{...register("password2")}
 								type="password"
 								placeholder="Re-enter your password"
+								defaultValue={user.password}
 							/>
 							{errors.password2 && (
 								<p className="text-danger">{errors.password2.message}</p>
