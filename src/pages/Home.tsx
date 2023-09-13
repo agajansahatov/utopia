@@ -2,6 +2,7 @@ import ProductList from "../components/ProductList";
 import Sidebar from "../components/Sidebar";
 import { useOutletContext } from "react-router-dom";
 import { ContextType } from "../App";
+import { useState } from "react";
 
 const sidebarLinks = [
 	{
@@ -22,29 +23,37 @@ const sidebarLinks = [
 	},
 	{
 		id: 4,
-		label: "Drinks",
-	},
-	{
-		id: 5,
 		label: "Books",
 	},
 	{
-		id: 6,
+		id: 5,
 		label: "Fruits",
 	},
 ];
 
 const Home = () => {
+	const [selectedCategory, setSelectedCategory] = useState(0);
 	const { onAddToCart, products } = useOutletContext<ContextType>();
 
-	const onFilter = () => {};
+	const productList =
+		selectedCategory == 0
+			? products
+			: products.filter(
+					(product) =>
+						product.category ===
+						sidebarLinks[selectedCategory].label.toLowerCase()
+			  );
 
 	return (
 		<>
-			<Sidebar elements={sidebarLinks} onClick={() => onFilter} />;
+			<Sidebar
+				elements={sidebarLinks}
+				onClick={(sidebarLinkId) => setSelectedCategory(sidebarLinkId)}
+			/>
+			;
 			<main className="content">
 				<ProductList
-					products={products}
+					products={productList}
 					onAddToCart={(product) => onAddToCart(product)}
 				/>
 			</main>
