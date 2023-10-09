@@ -8,6 +8,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { User } from "../interfaces/User";
+import { getBaseURL } from "../config/Configuration";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -63,7 +64,7 @@ const Register = () => {
 		}
 
 		axios
-			.post("http://localhost:8080/users", {
+			.post(getBaseURL() + "users", {
 				contact: data.contactInfo,
 				password: data.password1,
 				address: data.address,

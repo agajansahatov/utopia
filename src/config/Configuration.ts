@@ -21,3 +21,7 @@ export function getProductImageURL(imageName: string) {
 export function getUserImageURL(imageName: string) {
 	return getBaseURL() + "images/users/" + imageName;
 }
+
+export function getProductVideoURL(videoName: string) {
+	return getBaseURL() + "videos/" + videoName;
+}

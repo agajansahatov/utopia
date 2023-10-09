@@ -10,6 +10,7 @@ import { PurchasedProduct } from "../interfaces/PurchasedProduct";
 import { Product } from "../interfaces/Product";
 import Favourites from "../sections/Favourites";
 import WatchList from "../sections/WatchList";
+import { getBaseURL } from "../config/Configuration";
 
 const sidebarLinks = [
 	{
@@ -35,14 +36,12 @@ const History = () => {
 	if (!user) return;
 
 	useEffect(() => {
-		axios
-			.post("http://localhost:8080/products/purchased/all", user)
-			.then((res) => {
-				if (res.data !== null) {
-					const data: PurchasedProduct[] = res.data;
-					setOrders(getOrders(products, data));
-				}
-			});
+		axios.post(getBaseURL() + "products/purchased/all", user).then((res) => {
+			if (res.data !== null) {
+				const data: PurchasedProduct[] = res.data;
+				setOrders(getOrders(products, data));
+			}
+		});
 	}, []);
 
 	const onContentChange = (id: number) => {

@@ -8,6 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import axios from "axios";
+import { getBaseURL } from "../config/Configuration";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -54,7 +55,7 @@ const Login = () => {
 
 	const onSubmit = (data: FieldValues) => {
 		axios
-			.post("http://localhost:8080/auth", {
+			.post(getBaseURL() + "auth", {
 				contact: data.contactInfo,
 				password: data.password,
 			})

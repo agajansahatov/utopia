@@ -7,6 +7,7 @@ import useAuth from "../hooks/useAuth";
 import { User } from "../interfaces/User";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getBaseURL } from "../config/Configuration";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -41,7 +42,7 @@ type FormData = z.infer<typeof schema>;
 const Profile = () => {
 	const [serviceError, setServiceError] = useState("");
 
-	const user: User | null = useAuth();
+	const user = useAuth();
 	if (!user) {
 		return;
 	}
@@ -65,7 +66,7 @@ const Profile = () => {
 		user.password = data.password1;
 
 		axios
-			.put("http://localhost:8080/users", user)
+			.put(getBaseURL() + "users", user)
 			.then((res) => {
 				const data: User = res.data;
 				if (data.contact) {
@@ -100,7 +101,7 @@ const Profile = () => {
 							<Form.Control
 								{...register("name")}
 								placeholder="Enter your name"
-								defaultValue={user.name}
+								defaultValue={user.name !== null ? user.name : ""}
 							/>
 							{errors.name && (
 								<p className="text-danger">{errors.name.message}</p>
@@ -112,7 +113,7 @@ const Profile = () => {
 							<Form.Control
 								{...register("contactInfo")}
 								placeholder="Enter your contact information"
-								defaultValue={user.contact}
+								defaultValue={user.contact !== null ? user.contact : ""}
 							/>
 							{errors.contactInfo && (
 								<p className="text-danger">{errors.contactInfo.message}</p>
@@ -124,7 +125,7 @@ const Profile = () => {
 							<Form.Control
 								{...register("address")}
 								placeholder="Enter your shipping address"
-								defaultValue={user.address}
+								defaultValue={user.address !== null ? user.address : ""}
 							/>
 							{errors.address && (
 								<p className="text-danger">{errors.address.message}</p>
@@ -137,7 +138,7 @@ const Profile = () => {
 								{...register("password1")}
 								type="password"
 								placeholder="Enter a password"
-								defaultValue={user.password}
+								defaultValue={user.password !== null ? user.password : ""}
 							/>
 							{errors.password1 && (
 								<p className="text-danger">{errors.password1.message}</p>
@@ -150,7 +151,7 @@ const Profile = () => {
 								{...register("password2")}
 								type="password"
 								placeholder="Re-enter your password"
-								defaultValue={user.password}
+								defaultValue={user.password !== null ? user.password : ""}
 							/>
 							{errors.password2 && (
 								<p className="text-danger">{errors.password2.message}</p>

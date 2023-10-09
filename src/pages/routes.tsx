@@ -8,6 +8,8 @@ import App from "../App";
 import Error404 from "./Error404";
 import PrivateRoutes from "./PrivateRoutes";
 import Register from "./Register";
+import Sidebar from "../components/Sidebar";
+import ProductInfo from "../components/ProductInfo";
 
 const router = createBrowserRouter([
 	{
@@ -18,6 +20,7 @@ const router = createBrowserRouter([
 			{ index: true, element: <Home /> },
 			{ path: "login", element: <Login /> },
 			{ path: "register", element: <Register /> },
+			{ path: "product/5", element: <ProductInfo /> },
 			{
 				element: <PrivateRoutes />,
 				children: [

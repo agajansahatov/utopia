@@ -1,9 +1,9 @@
 export interface User {
-	id: number;
-	name: string;
-	contact: string;
-	image: string;
-	password: string;
-	address: string;
-	balance: string;
+	id: number | null;
+	name: string | null;
+	contact: string | null;
+	image: string | null;
+	password: string | null;
+	address: string | null;
+	balance: string | null;
 }
