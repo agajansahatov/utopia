@@ -33,7 +33,8 @@ const sidebarLinks = [
 
 const Home = () => {
 	const [selectedCategory, setSelectedCategory] = useState(0);
-	const { onAddToCart, products } = useOutletContext<ContextType>();
+	const { products, favourites, onAddToCart, onLike } =
+		useOutletContext<ContextType>();
 
 	const productList =
 		selectedCategory == 0
@@ -54,7 +55,9 @@ const Home = () => {
 			<main className="content">
 				<ProductList
 					products={productList}
+					favourites={favourites}
 					onAddToCart={(product) => onAddToCart(product)}
+					onLike={onLike}
 				/>
 			</main>
 		</>

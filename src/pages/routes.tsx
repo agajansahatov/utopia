@@ -8,7 +8,6 @@ import App from "../App";
 import Error404 from "./Error404";
 import PrivateRoutes from "./PrivateRoutes";
 import Register from "./Register";
-import Sidebar from "../components/Sidebar";
 import ProductInfo from "../components/ProductInfo";
 
 const router = createBrowserRouter([

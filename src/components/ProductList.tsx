@@ -1,18 +1,17 @@
+import { Favourite } from "../interfaces/Favourite";
 import { Product } from "../interfaces/Product";
 import ProductCard from "./ProductCard";
 
 interface Props {
 	products: Product[];
+	favourites: Favourite[];
 	onAddToCart: (product: Product) => void;
+	onLike: (productId: number) => void;
 }
 
-const ProductList = ({ products, onAddToCart }: Props) => {
-	if (products.length == 0)
-		return (
-			<p className="text-danger">
-				Couln't get the products list from the database
-			</p>
-		);
+const ProductList = ({ products, favourites, onAddToCart, onLike }: Props) => {
+	if (products.length == 0) return;
+
 	return (
 		<div className="products-list-field">
 			{products.map((product) => (
@@ -20,6 +19,8 @@ const ProductList = ({ products, onAddToCart }: Props) => {
 					product={product}
 					key={product.id}
 					onAddToCart={(product) => onAddToCart(product)}
+					onLike={onLike}
+					isLiked={favourites.some((fav) => fav.product === product.id)}
 				/>
 			))}
 		</div>
