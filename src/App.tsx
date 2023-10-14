@@ -17,10 +17,6 @@ export interface ContextType {
 	onLike: (productId: number) => void;
 }
 
-export interface ContextProducts {
-	products: Product[];
-}
-
 const App = () => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [favourites, setFavourites] = useState<Favourite[]>([]);

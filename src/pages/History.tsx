@@ -2,7 +2,7 @@ import Sidebar from "../components/Sidebar";
 import { useEffect, useState } from "react";
 import OrderList from "../sections/OrderList";
 import { useOutletContext } from "react-router-dom";
-import { ContextProducts, ContextType } from "../App";
+import { ContextType } from "../App";
 import { User } from "../interfaces/User";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
@@ -30,7 +30,8 @@ const sidebarLinks = [
 const History = () => {
 	const [content, setContent] = useState(0);
 	const [orders, setOrders] = useState<PurchasedProduct[]>([]);
-	const { products } = useOutletContext<ContextProducts>();
+	const { products, favourites, onAddToCart, onLike } =
+		useOutletContext<ContextType>();
 
 	const user: User | null = useAuth();
 	if (!user) return;
@@ -47,13 +48,20 @@ const History = () => {
 	const onContentChange = (id: number) => {
 		setContent(id);
 	};
-
+	console.log(favourites);
 	return (
 		<>
 			<Sidebar elements={sidebarLinks} onClick={onContentChange} />
 			<main className="content">
 				{content == 0 && <OrderList orders={orders} />}
-				{content == 1 && <Favourites />}
+				{content == 1 && (
+					<Favourites
+						products={products}
+						favourites={favourites}
+						onAddToCart={onAddToCart}
+						onLike={onLike}
+					/>
+				)}
 				{content == 2 && <WatchList />}
 			</main>
 		</>
