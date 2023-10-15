@@ -1,4 +1,3 @@
-import React from "react";
 import ProductList from "../components/ProductList";
 import { Product } from "../interfaces/Product";
 import { Favourite } from "../interfaces/Favourite";
@@ -16,12 +15,15 @@ const Favourites = ({ products, favourites, onAddToCart, onLike }: Props) => {
 	});
 
 	return (
-		<ProductList
-			products={favouriteProducts}
-			favourites={favourites}
-			onAddToCart={(product) => onAddToCart(product)}
-			onLike={onLike}
-		/>
+		<>
+			<h1 className="m-0 p-0 mb-2 text-white text-center">Favourites</h1>
+			<ProductList
+				products={favouriteProducts}
+				favourites={favourites}
+				onAddToCart={(product) => onAddToCart(product)}
+				onLike={onLike}
+			/>
+		</>
 	);
 };
 

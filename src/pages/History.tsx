@@ -1,16 +1,10 @@
 import Sidebar from "../components/Sidebar";
-import { useEffect, useState } from "react";
-import OrderList from "../sections/OrderList";
+import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { ContextType } from "../App";
-import { User } from "../interfaces/User";
-import axios from "axios";
-import useAuth from "../hooks/useAuth";
-import { PurchasedProduct } from "../interfaces/PurchasedProduct";
-import { Product } from "../interfaces/Product";
 import Favourites from "../sections/Favourites";
 import WatchList from "../sections/WatchList";
-import { getBaseURL } from "../config/Configuration";
+import OrderList from "../sections/OrderList";
 
 const sidebarLinks = [
 	{
@@ -29,31 +23,18 @@ const sidebarLinks = [
 
 const History = () => {
 	const [content, setContent] = useState(0);
-	const [orders, setOrders] = useState<PurchasedProduct[]>([]);
 	const { products, favourites, onAddToCart, onLike } =
 		useOutletContext<ContextType>();
-
-	const user: User | null = useAuth();
-	if (!user) return;
-
-	useEffect(() => {
-		axios.post(getBaseURL() + "products/purchased/all", user).then((res) => {
-			if (res.data !== null) {
-				const data: PurchasedProduct[] = res.data;
-				setOrders(getOrders(products, data));
-			}
-		});
-	}, []);
 
 	const onContentChange = (id: number) => {
 		setContent(id);
 	};
-	console.log(favourites);
+
 	return (
 		<>
 			<Sidebar elements={sidebarLinks} onClick={onContentChange} />
 			<main className="content">
-				{content == 0 && <OrderList orders={orders} />}
+				{content == 0 && <OrderList products={products} />}
 				{content == 1 && (
 					<Favourites
 						products={products}
@@ -69,18 +50,3 @@ const History = () => {
 };
 
 export default History;
-
-const getOrders = (
-	products: Product[],
-	purchasedProducts: PurchasedProduct[]
-) => {
-	purchasedProducts.forEach((p) => {
-		const product = products.find((product) => product.id === p.product);
-		if (product) {
-			p.image = product.image;
-			p.name = product.name;
-			p.price = product.price;
-		}
-	});
-	return purchasedProducts;
-};
