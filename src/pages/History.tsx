@@ -43,7 +43,14 @@ const History = () => {
 						onLike={onLike}
 					/>
 				)}
-				{content == 2 && <WatchList />}
+				{content == 2 && (
+					<WatchList
+						products={products}
+						favourites={favourites}
+						onAddToCart={onAddToCart}
+						onLike={onLike}
+					/>
+				)}
 			</main>
 		</>
 	);

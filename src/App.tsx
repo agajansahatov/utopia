@@ -26,24 +26,28 @@ const App = () => {
 	const user: User | null = useAuth();
 
 	useEffect(() => {
-		axios
-			.get(getBaseURL() + "products")
-			.then((res) => {
-				setProducts(res.data);
-			})
-			.catch((error) => {
-				setError(error.message);
-			});
+		if (products.length == 0) {
+			axios
+				.get(getBaseURL() + "products")
+				.then((res) => {
+					setProducts(res.data);
+				})
+				.catch((error) => {
+					setError(error.message);
+				});
+		}
 
 		if (!user) return;
-		axios
-			.get(`${getBaseURL()}favourites/${user.id}`)
-			.then((res) => {
-				setFavourites(res.data);
-			})
-			.catch((error) => {
-				setError(error.message);
-			});
+		if (favourites.length == 0) {
+			axios
+				.get(`${getBaseURL()}favourites/${user.id}`)
+				.then((res) => {
+					setFavourites(res.data);
+				})
+				.catch((error) => {
+					setError(error.message);
+				});
+		}
 	}, []);
 
 	const onAddToCart = (product: Product) => {
@@ -104,7 +108,12 @@ const App = () => {
 				)}
 				<Outlet
 					context={
-						{ products, favourites, onAddToCart, onLike } satisfies ContextType
+						{
+							products,
+							favourites,
+							onAddToCart,
+							onLike,
+						} satisfies ContextType
 					}
 				/>
 			</div>

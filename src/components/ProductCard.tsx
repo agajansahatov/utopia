@@ -28,13 +28,17 @@ const ProductCard = ({ product, onAddToCart, onLike, isLiked }: Props) => {
 					<h5 className="card-title">{product.name}</h5>
 					<h5 className="text-light mt-2">${product.price}</h5>
 				</div>
-				<p className="card-text">{product.description}</p>
+				<p className="card-text">
+					{product.description.length > 50
+						? product.description.slice(0, 50) + "..."
+						: product.description}
+				</p>
 				<div className="d-flex align-items-center justify-content-between">
 					{user && (
 						<Like status={isLiked} onToggle={() => onLike(product.id)} />
 					)}
 					<span>
-						<Link to="product/5" className="btn btn-danger me-2">
+						<Link to={"/product/" + product.id} className="btn btn-danger me-2">
 							Learn More
 						</Link>
 						<Button variant="primary" onClick={() => onAddToCart(product)}>

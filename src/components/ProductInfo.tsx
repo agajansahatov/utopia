@@ -1,7 +1,44 @@
-import { Link } from "react-router-dom";
-import { getProductVideoURL } from "../config/Configuration";
+import { Link, useParams } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import { getBaseURL } from "../config/Configuration";
+import { Product } from "../interfaces/Product";
+import useAuth from "../hooks/useAuth";
+import { User } from "../interfaces/User";
 
 const ProductInfo = () => {
+	const { productId } = useParams();
+	const [id, setId] = useState(-1);
+	const [error, setError] = useState("");
+	const [product, setProduct] = useState<Product>();
+	const user: User | null = useAuth();
+
+	useEffect(() => {
+		if (id !== Number(productId)) {
+			setId(Number(productId));
+		}
+	}, [productId]);
+
+	useEffect(() => {
+		if (id !== -1) {
+			axios
+				.get(`${getBaseURL()}products/${id}`)
+				.then((res) => {
+					setProduct(res.data);
+
+					if (user !== null) {
+						axios.post(getBaseURL() + "visited", {
+							user: user.id,
+							product: productId,
+						});
+					}
+				})
+				.catch((error) => {
+					setError(error.message);
+				});
+		}
+	}, [id]);
+
 	return (
 		<>
 			<span className="d-flex align-items-center justify-content-center pt-3">
@@ -11,16 +48,10 @@ const ProductInfo = () => {
 					style={{ position: "absolute", left: "15px" }}>
 					Go Back
 				</Link>
-				<h3>ProductInfo</h3>
+				<h3>ProductInfo of {product && product.id}</h3>
 			</span>
 			<div className="d-flex justify-content-center mt-2">
-				<video
-					src={getProductVideoURL("Introducing iPhone 15 Pro - Apple.mp4")}
-					width="65%"
-					controls={true}
-					autoPlay={true}>
-					Your browser does not support the video tag.
-				</video>
+				{product && product.name}
 			</div>
 		</>
 	);

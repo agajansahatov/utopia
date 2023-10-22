@@ -11,7 +11,12 @@ const PrivateRoutes = () => {
 	return (
 		<Outlet
 			context={
-				{ products, favourites, onAddToCart, onLike } satisfies ContextType
+				{
+					products,
+					favourites,
+					onAddToCart,
+					onLike,
+				} satisfies ContextType
 			}
 		/>
 	);
