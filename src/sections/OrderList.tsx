@@ -1,11 +1,12 @@
 import { Table } from "react-bootstrap";
-import { Order, PurchasedProduct } from "../interfaces/PurchasedProduct";
+import { PurchasedProduct } from "../interfaces/PurchasedProduct";
 import { getBaseURL, getProductImageURL } from "./../config/Configuration";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { User } from "../interfaces/User";
 import useAuth from "../hooks/useAuth";
 import { Product } from "../interfaces/Product";
+import { Order } from "../interfaces/Order";
 
 interface Props {
 	products: Product[];
