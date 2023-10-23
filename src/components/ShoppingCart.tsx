@@ -10,34 +10,39 @@ import {
 	Toast,
 	ToastContainer,
 } from "react-bootstrap";
-import { PurchasedProduct } from "./../interfaces/PurchasedProduct";
+import { Order } from "./../interfaces/PurchasedProduct";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { getBaseURL, getProductImageURL } from "../config/Configuration";
 
 interface Props {
-	products: Product[];
+	orderedProducts: Product[];
 	visible: boolean;
 	onToggle: () => void;
 	onClear: () => void;
 }
 
-const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
+const ShoppingCart = ({
+	visible,
+	onToggle,
+	orderedProducts,
+	onClear,
+}: Props) => {
 	const [toasterSuccess, setToasterSuccess] = useState(false);
 	const [toasterFailure, setToasterFailure] = useState(false);
 	const [serviceError, setServiceError] = useState("");
 
 	const user: User | null = useAuth();
 	if (!user) return;
-	const purchasedProducts = getPurchasedProducts(products, user);
+	const orders = getOrders(orderedProducts, user);
 
 	const onPurchase = () => {
-		purchasedProducts.forEach((product) => {
-			product.status = "paid";
+		orders.forEach((p) => {
+			p.status = "paid";
 		});
 
 		axios
-			.post(getBaseURL() + "products/purchased/new", purchasedProducts)
+			.post(getBaseURL() + "products/purchased/new", orders)
 			.then((res) => {
 				if (res.data == false) {
 					setServiceError("Bad Request!");
@@ -70,7 +75,10 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 
 	return (
 		<>
-			<ShoppingBasket onClick={onToggle} numberOfProducts={products.length} />
+			<ShoppingBasket
+				onClick={onToggle}
+				numberOfProducts={orderedProducts.length}
+			/>
 			<Modal
 				show={visible}
 				onHide={onToggle}
@@ -81,7 +89,7 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 					<Modal.Title className="pe-none">Shopping Cart</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{purchasedProducts.length == 0 ? (
+					{orders.length == 0 ? (
 						<p className="text-white">Your UTOPIA Cart is empty!</p>
 					) : (
 						<Table bordered hover variant="dark" className="pe-none">
@@ -97,7 +105,7 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 								</tr>
 							</thead>
 							<tbody>
-								{purchasedProducts.map((p, i) => (
+								{orders.map((p, i) => (
 									<tr className="pe-auto" key={p.id}>
 										<td>{i + 1}</td>
 										<td>
@@ -129,13 +137,13 @@ const ShoppingCart = ({ visible, onToggle, products, onClear }: Props) => {
 					<div>
 						<h4 className="d-inline me-3">
 							<Badge bg="danger" pill>
-								{products.length}
+								{orderedProducts.length}
 							</Badge>
 						</h4>
 						<Button
 							variant="primary"
 							onClick={onPurchase}
-							disabled={purchasedProducts.length == 0}>
+							disabled={orders.length == 0}>
 							BUY NOW
 						</Button>
 					</div>
@@ -194,35 +202,66 @@ const getDate = (): string => {
 	return `${day}.${month}.${year}`;
 };
 
-const getPurchasedProducts = (products: Product[], user: User) => {
-	const pps: PurchasedProduct[] = [];
+// const getOrders = (orderedProducts: Product[], user: User) => {
+// 	const orders: Order[] = [];
 
-	for (let i = 0; i < products.length; ++i) {
-		const product: Product = products[i];
+// 	for (let i = 0; i < orderedProducts.length; ++i) {
+// 		const p: Product = orderedProducts[i];
 
-		if (pps[product.id] !== null && pps[product.id] !== undefined) {
-			pps[product.id].quantity += 1;
+// 		if (orders[p.id] !== null && orders[p.id] !== undefined) {
+// 			orders[p.id].quantity += 1;
+// 		} else {
+// 			if (user && user.id && user.address) {
+// 				orders[p.id] = {
+// 					id: p.id,
+// 					user: user.id,
+// 					p: p.id,
+// 					quantity: 1,
+// 					destination: user.address,
+// 					status: "Unpaid",
+// 					date: getDate(),
+// 					image: p.image,
+// 					name: p.name,
+// 					price: p.price,
+// 				};
+// 			}
+// 		}
+// 	}
+// 	const orders: Order[] = [];
+// 	for (let i = 0; i < orders.length; ++i) {
+// 		if (orders[i] !== null && orders[i] !== undefined) {
+// 			orders.push({ ...orders[i] });
+// 		}
+// 	}
+
+// 	return orders;
+// };
+
+const getOrders = (orderedProducts: Product[], user: User) => {
+	const orders: Order[] = [];
+
+	for (let i = 0; i < orderedProducts.length; ++i) {
+		const p: Product = orderedProducts[i];
+
+		//There may be many of one p, so need to check
+		if (orders[p.id] !== null && orders[p.id] !== undefined) {
+			orders[p.id].quantity += 1;
 		} else {
-			pps[product.id] = {
-				id: product.id,
-				user: user.id,
-				product: product.id,
-				quantity: 1,
-				destination: user.address,
-				status: "Unpaid",
-				date: getDate(),
-				image: product.image,
-				name: product.name,
-				price: product.price,
-			};
+			if (user && user.id && user.address) {
+				orders[p.id] = {
+					id: p.id,
+					user: user.id,
+					product: p.id,
+					quantity: 1,
+					destination: user.address,
+					status: "Unpaid",
+					date: getDate(),
+					image: p.image,
+					name: p.name,
+					price: p.price,
+				};
+			}
 		}
 	}
-	const purchasedProducts: PurchasedProduct[] = [];
-	for (let i = 0; i < pps.length; ++i) {
-		if (pps[i] !== null && pps[i] !== undefined) {
-			purchasedProducts.push({ ...pps[i] });
-		}
-	}
-
-	return purchasedProducts;
+	return orders;
 };

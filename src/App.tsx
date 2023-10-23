@@ -121,7 +121,7 @@ const App = () => {
 				<ShoppingCart
 					onToggle={() => setShoppingCartVisible(!shoppingCartVisible)}
 					visible={shoppingCartVisible}
-					products={shoppingCartList}
+					orderedProducts={shoppingCartList}
 					onClear={onClearShoppingCart}
 				/>
 			)}
