@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./Home";
 import History from "./History";
-import Balance from "../sections/Balance";
 import Account from "./Account";
 import Login from "./Login";
 import App from "../App";
@@ -24,8 +23,9 @@ const router = createBrowserRouter([
 				element: <PrivateRoutes />,
 				children: [
 					{ path: "/history", element: <History /> },
-					{ path: "/balance", element: <Balance /> },
+					{ path: "/history/:page", element: <History /> },
 					{ path: "/account", element: <Account /> },
+					{ path: "/account/:page", element: <Account /> },
 					{ path: "/products/add", element: <Account /> },
 				],
 			},
