@@ -9,6 +9,8 @@ import { Product } from "./interfaces/Product";
 import { getBaseURL } from "./config/Configuration";
 import { Favourite } from "./interfaces/Favourite";
 import { User } from "./interfaces/User";
+import { Order } from "./interfaces/Order";
+import { getDate } from "./utilities/Date";
 
 export interface ContextType {
 	products: Product[];
@@ -20,7 +22,7 @@ export interface ContextType {
 const App = () => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [favourites, setFavourites] = useState<Favourite[]>([]);
-	const [shoppingCartList, setShoppingCartList] = useState<Product[]>([]);
+	const [orders, setOrders] = useState<Order[]>([]);
 	const [shoppingCartVisible, setShoppingCartVisible] = useState(false);
 	const [error, setError] = useState("");
 	const user: User | null = useAuth();
@@ -51,11 +53,57 @@ const App = () => {
 	}, []);
 
 	const onAddToCart = (product: Product) => {
-		setShoppingCartList([product, ...shoppingCartList]);
+		if (!user) return;
+		// Check if the product's id already exists in orders
+		const orderIndex = orders.findIndex(
+			(order) => order.product === product.id
+		);
+
+		if (orderIndex !== -1) {
+			const updatedOrders = [...orders];
+			updatedOrders[orderIndex].quantity += 1;
+			setOrders(updatedOrders);
+		} else {
+			if (!user.id || !user.address) return;
+			const newOrder: Order = {
+				user: user.id,
+				product: product.id,
+				quantity: 1,
+				destination: user.address,
+				status: "Pending",
+				date: getDate(),
+				image: product.image,
+				name: product.name,
+				price: product.price,
+			};
+			setOrders([...orders, newOrder]);
+		}
 	};
 
 	const onClearShoppingCart = () => {
-		setShoppingCartList([]);
+		setOrders([]);
+	};
+
+	const OnIncreaseOrderQuantity = (orderIndex: number) => {
+		if (orderIndex >= 0 && orderIndex < orders.length) {
+			const updatedOrders = [...orders];
+			updatedOrders[orderIndex].quantity += 1;
+			setOrders(updatedOrders);
+		}
+	};
+
+	const OnDecreaseOrderQuantity = (orderIndex: number) => {
+		if (orderIndex >= 0 && orderIndex < orders.length) {
+			const updatedOrders = [...orders];
+			if (updatedOrders[orderIndex].quantity > 1) {
+				updatedOrders[orderIndex].quantity -= 1;
+				setOrders(updatedOrders);
+			} else {
+				// If quantity is 1, you may want to remove the order from the list
+				updatedOrders.splice(orderIndex, 1);
+				setOrders(updatedOrders);
+			}
+		}
 	};
 
 	const onLike = (productId: number) => {
@@ -119,10 +167,12 @@ const App = () => {
 			</div>
 			{user && (
 				<ShoppingCart
-					onToggle={() => setShoppingCartVisible(!shoppingCartVisible)}
+					orders={orders}
 					visible={shoppingCartVisible}
-					orderedProducts={shoppingCartList}
+					onToggle={() => setShoppingCartVisible(!shoppingCartVisible)}
 					onClear={onClearShoppingCart}
+					onAdd={OnIncreaseOrderQuantity}
+					onDelete={OnDecreaseOrderQuantity}
 				/>
 			)}
 		</>

@@ -1,5 +1,4 @@
 import useAuth from "../hooks/useAuth";
-import { Product } from "../interfaces/Product";
 import { User } from "../interfaces/User";
 import ShoppingBasket from "./ShoppingBasket";
 import {
@@ -10,35 +9,43 @@ import {
 	Toast,
 	ToastContainer,
 } from "react-bootstrap";
-import { Order } from "./../interfaces/PurchasedProduct";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { getBaseURL, getProductImageURL } from "../config/Configuration";
+import { Order } from "../interfaces/Order";
 
 interface Props {
-	orderedProducts: Product[];
+	orders: Order[];
 	visible: boolean;
 	onToggle: () => void;
 	onClear: () => void;
+	onAdd: (orderIndex: number) => void;
+	onDelete: (orderIndex: number) => void;
 }
 
 const ShoppingCart = ({
+	orders,
 	visible,
 	onToggle,
-	orderedProducts,
 	onClear,
+	onAdd,
+	onDelete,
 }: Props) => {
 	const [toasterSuccess, setToasterSuccess] = useState(false);
 	const [toasterFailure, setToasterFailure] = useState(false);
 	const [serviceError, setServiceError] = useState("");
-
 	const user: User | null = useAuth();
+
 	if (!user) return;
-	const orders = getOrders(orderedProducts, user);
+
+	let numberOfOrders = 0;
+	orders.forEach((order) => {
+		numberOfOrders += order.quantity;
+	});
 
 	const onPurchase = () => {
 		orders.forEach((p) => {
-			p.status = "paid";
+			p.status = "Paid";
 		});
 
 		axios
@@ -51,21 +58,6 @@ const ShoppingCart = ({
 				onToggle();
 				setToasterSuccess(!toasterSuccess);
 				onClear();
-				axios
-					.post(getBaseURL() + "auth", user)
-					.then((res) => {
-						const data = res.data;
-						if (data.contact) {
-							localStorage.setItem("user", JSON.stringify(res.data));
-						} else {
-							localStorage.removeItem("user");
-							window.location.pathname = "/login";
-						}
-					})
-					.catch(() => {
-						localStorage.removeItem("user");
-						window.location.pathname = "/login";
-					});
 			})
 			.catch((e: AxiosError) => {
 				setServiceError(e.message);
@@ -75,10 +67,7 @@ const ShoppingCart = ({
 
 	return (
 		<>
-			<ShoppingBasket
-				onClick={onToggle}
-				numberOfProducts={orderedProducts.length}
-			/>
+			<ShoppingBasket onClick={onToggle} numberOfProducts={numberOfOrders} />
 			<Modal
 				show={visible}
 				onHide={onToggle}
@@ -106,7 +95,7 @@ const ShoppingCart = ({
 							</thead>
 							<tbody>
 								{orders.map((p, i) => (
-									<tr className="pe-auto" key={p.id}>
+									<tr className="pe-auto" key={i}>
 										<td>{i + 1}</td>
 										<td>
 											<img
@@ -119,10 +108,14 @@ const ShoppingCart = ({
 										<td>${p.price}</td>
 										<td>{p.quantity}</td>
 										<td>
-											<Button variant="danger">Delete</Button>
+											<Button variant="danger" onClick={() => onDelete(i)}>
+												Delete
+											</Button>
 										</td>
 										<td>
-											<Button variant="primary">Add</Button>
+											<Button variant="primary" onClick={() => onAdd(i)}>
+												Add
+											</Button>
 										</td>
 									</tr>
 								))}
@@ -137,7 +130,7 @@ const ShoppingCart = ({
 					<div>
 						<h4 className="d-inline me-3">
 							<Badge bg="danger" pill>
-								{orderedProducts.length}
+								{numberOfOrders}
 							</Badge>
 						</h4>
 						<Button
@@ -192,76 +185,3 @@ const ShoppingCart = ({
 };
 
 export default ShoppingCart;
-
-const getDate = (): string => {
-	const today: Date = new Date();
-	const year: number = today.getFullYear();
-	const month: number = today.getMonth() + 1; // Months are zero-based, so we add 1
-	const day: number = today.getDate();
-
-	return `${day}.${month}.${year}`;
-};
-
-// const getOrders = (orderedProducts: Product[], user: User) => {
-// 	const orders: Order[] = [];
-
-// 	for (let i = 0; i < orderedProducts.length; ++i) {
-// 		const p: Product = orderedProducts[i];
-
-// 		if (orders[p.id] !== null && orders[p.id] !== undefined) {
-// 			orders[p.id].quantity += 1;
-// 		} else {
-// 			if (user && user.id && user.address) {
-// 				orders[p.id] = {
-// 					id: p.id,
-// 					user: user.id,
-// 					p: p.id,
-// 					quantity: 1,
-// 					destination: user.address,
-// 					status: "Unpaid",
-// 					date: getDate(),
-// 					image: p.image,
-// 					name: p.name,
-// 					price: p.price,
-// 				};
-// 			}
-// 		}
-// 	}
-// 	const orders: Order[] = [];
-// 	for (let i = 0; i < orders.length; ++i) {
-// 		if (orders[i] !== null && orders[i] !== undefined) {
-// 			orders.push({ ...orders[i] });
-// 		}
-// 	}
-
-// 	return orders;
-// };
-
-const getOrders = (orderedProducts: Product[], user: User) => {
-	const orders: Order[] = [];
-
-	for (let i = 0; i < orderedProducts.length; ++i) {
-		const p: Product = orderedProducts[i];
-
-		//There may be many of one p, so need to check
-		if (orders[p.id] !== null && orders[p.id] !== undefined) {
-			orders[p.id].quantity += 1;
-		} else {
-			if (user && user.id && user.address) {
-				orders[p.id] = {
-					id: p.id,
-					user: user.id,
-					product: p.id,
-					quantity: 1,
-					destination: user.address,
-					status: "Unpaid",
-					date: getDate(),
-					image: p.image,
-					name: p.name,
-					price: p.price,
-				};
-			}
-		}
-	}
-	return orders;
-};
