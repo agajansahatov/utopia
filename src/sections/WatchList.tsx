@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../interfaces/User";
 import useAuth from "../hooks/useAuth";
 import { Visited } from "../interfaces/Visited";
@@ -38,17 +38,23 @@ const WatchList = ({ products, favourites, onAddToCart, onLike }: Props) => {
 		vProducts.unshift(products[v.product - 1]);
 	});
 
-	return (
-		<>
-			<h1 className="m-0 p-0 mb-2 text-white text-center">WatchList</h1>
-			<ProductList
-				products={vProducts}
-				favourites={favourites}
-				onAddToCart={(product) => onAddToCart(product)}
-				onLike={onLike}
-			/>
-		</>
-	);
+	if (Array.isArray(vProducts) && vProducts.length > 0) {
+		return (
+			<>
+				<h1 className="m-0 p-0 mb-2 text-white text-center">WatchList</h1>
+				<ProductList
+					products={vProducts}
+					favourites={favourites}
+					onAddToCart={(product) => onAddToCart(product)}
+					onLike={onLike}
+				/>
+			</>
+		);
+	} else {
+		return (
+			<h2 className="py-1 text-white text-center">Your watchlist is empty!</h2>
+		);
+	}
 };
 
 export default WatchList;
