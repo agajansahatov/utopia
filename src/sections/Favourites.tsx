@@ -29,7 +29,7 @@ const Favourites = ({ products, favourites, onAddToCart, onLike }: Props) => {
 	} else {
 		return (
 			<h2 className="py-1 text-white text-center">
-				You don't have ony favourite products!
+				You don't have any favourite products!
 			</h2>
 		);
 	}
