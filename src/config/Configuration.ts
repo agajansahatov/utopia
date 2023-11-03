@@ -11,7 +11,7 @@ export function getBrand() {
 }
 
 export function getBaseURL() {
-	return "http://localhost:8080/";
+	return "http://192.168.31.8:8080/";
 }
 
 export function getProductImageURL(imageName: string) {
