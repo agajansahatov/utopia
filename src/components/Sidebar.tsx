@@ -25,7 +25,7 @@ const Sidebar = ({ isVisible, onHide }: Props) => {
 			>
 				<Offcanvas.Body className="p-0 m-0 d-block">
 					<Navbar
-						className="px-2 px-md-4 bg-gradient justify-content-between"
+						className="px-2 px-lg-4 bg-gradient justify-content-between"
 						bg="black"
 						data-bs-theme="dark"
 						variant="dark"
@@ -46,7 +46,6 @@ const Sidebar = ({ isVisible, onHide }: Props) => {
 							variant="outline-dark"
 							className="text-white pb-2 border-0 d-lg-none"
 							onClick={onHide}
-							style={{ marginRight: "-5px" }}
 						>
 							<BsArrowLeft />
 						</Button>
