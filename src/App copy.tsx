@@ -56,7 +56,7 @@ const App = () => {
 		if (!user) return;
 		// Check if the product's id already exists in orders
 		const orderIndex = orders.findIndex(
-			(order) => order.product === product.id
+			(order) => order.product === product.id,
 		);
 
 		if (orderIndex !== -1) {
@@ -110,13 +110,13 @@ const App = () => {
 		if (!user || user.id == null) return;
 
 		const existsInFavourites: boolean = favourites.some(
-			(fav) => fav.user === user.id && fav.product === productId
+			(fav) => fav.user === user.id && fav.product === productId,
 		);
 
 		if (existsInFavourites) {
 			// Remove fProduct from favourites array
 			const newFavourites = favourites.filter(
-				(fav) => !(fav.user === user.id && fav.product === productId)
+				(fav) => !(fav.user === user.id && fav.product === productId),
 			);
 			setFavourites(newFavourites);
 

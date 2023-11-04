@@ -11,6 +11,8 @@ import { Favourite } from "./interfaces/Favourite";
 import { User } from "./interfaces/User";
 import { Order } from "./interfaces/Order";
 import { getDate } from "./utilities/Date";
+import Sidebar from "./components/Sidebar";
+import { Button } from "react-bootstrap";
 
 export interface ContextType {
 	products: Product[];
@@ -20,37 +22,13 @@ export interface ContextType {
 }
 
 const App = () => {
+	const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 	const [products, setProducts] = useState<Product[]>([]);
 	const [favourites, setFavourites] = useState<Favourite[]>([]);
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [shoppingCartVisible, setShoppingCartVisible] = useState(false);
 	const [error, setError] = useState("");
 	const user: User | null = useAuth();
-
-	useEffect(() => {
-		if (products.length == 0) {
-			axios
-				.get(getBaseURL() + "products")
-				.then((res) => {
-					setProducts(res.data);
-				})
-				.catch((error) => {
-					setError(error.message);
-				});
-		}
-
-		if (!user) return;
-		if (favourites.length == 0) {
-			axios
-				.get(`${getBaseURL()}favourites/${user.id}`)
-				.then((res) => {
-					setFavourites(res.data);
-				})
-				.catch((error) => {
-					setError(error.message);
-				});
-		}
-	}, []);
 
 	const onAddToCart = (product: Product) => {
 		if (!user) return;
@@ -143,13 +121,48 @@ const App = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (products.length == 0) {
+			axios
+				.get(getBaseURL() + "products")
+				.then((res) => {
+					setProducts(res.data);
+				})
+				.catch((error) => {
+					setError(error.message);
+				});
+		}
+
+		if (!user) return;
+		if (favourites.length == 0) {
+			axios
+				.get(`${getBaseURL()}favourites/${user.id}`)
+				.then((res) => {
+					setFavourites(res.data);
+				})
+				.catch((error) => {
+					setError(error.message);
+				});
+		}
+	}, []);
+
 	return (
 		<>
 			<div className="d-flex" id="container">
-				<aside id="sidebar"></aside>
+				<aside id="sidebar">
+					<Sidebar
+						isVisible={isSidebarVisible}
+						onHide={() => setIsSidebarVisible(false)}
+					/>
+				</aside>
 
 				<main id="wrapper">
-					<header className="sticky-top" id="navbar"></header>
+					<header className="sticky-top" id="navbar">
+						<NavbarTop
+							links={getNavbarLinks()}
+							onShowSidebar={() => setIsSidebarVisible(true)}
+						/>
+					</header>
 
 					<section className="p-2" id="content">
 						Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae porro

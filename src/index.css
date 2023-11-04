@@ -1,7 +1,16 @@
+:root {
+	--navbarHeight: 62px;
+}
+
 .offcanvas-lg {
 	width: 300px !important;
 }
 
 .navbar {
-	min-height: 64px;
+	min-height: var(--navbarHeight);
+}
+
+#sidebar-body {
+	height: calc(100vh - var(--navbarHeight));
+	overflow-y: auto;
 }
