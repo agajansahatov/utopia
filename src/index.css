@@ -14,3 +14,32 @@
 	height: calc(100vh - var(--navbarHeight));
 	overflow-y: auto;
 }
+
+/* Scrolbar */
+*::-webkit-scrollbar {
+	width: 10px;
+	background: #000;
+}
+
+#sidebar *::-webkit-scrollbar {
+	width: 5px;
+}
+
+#sidebar {
+	scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background: #393939;
+}
+
+*::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.7);
+	border: 1px solid #393939;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: #fff;
+}
