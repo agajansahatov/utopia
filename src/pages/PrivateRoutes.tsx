@@ -13,6 +13,7 @@ const PrivateRoutes = () => {
 		onLike,
 		isSidebarVisible,
 		onHideSidebar,
+		onShowSidebar,
 	} = useOutletContext<ContextType>();
 
 	return (
@@ -25,6 +26,7 @@ const PrivateRoutes = () => {
 					onLike,
 					isSidebarVisible,
 					onHideSidebar,
+					onShowSidebar,
 				} satisfies ContextType
 			}
 		/>

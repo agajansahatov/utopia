@@ -7,6 +7,8 @@ import Balance from "../sections/Balance";
 import { AppLink } from "./../interfaces/AppLink";
 import { useOutletContext, useParams } from "react-router-dom";
 import { ContextType } from "../App";
+import NavbarTop from "../components/NavbarTop";
+import { getNavbarLinks } from "../config/NavbarLinks";
 
 let sidebarLinks: AppLink[] = [
 	{
@@ -28,7 +30,8 @@ let sidebarLinks: AppLink[] = [
 ];
 
 const Account = () => {
-	const { isSidebarVisible, onHideSidebar } = useOutletContext<ContextType>();
+	const { isSidebarVisible, onHideSidebar, onShowSidebar } =
+		useOutletContext<ContextType>();
 
 	let logoutId = 2;
 	const user: User | null = useAuth();
@@ -84,6 +87,8 @@ const Account = () => {
 
 	return (
 		<>
+			<NavbarTop links={getNavbarLinks()} onShowSidebar={onShowSidebar} />
+
 			<Sidebar
 				elements={sidebarLinks}
 				root="/account/"
@@ -93,16 +98,16 @@ const Account = () => {
 			/>
 
 			{user && user.id === 1 ? (
-				<section className="overflow-auto position-fixed top-0" id="content">
+				<main className="overflow-auto position-fixed top-0" id="content">
 					{content == 0 && <Admin />}
 					{content == 1 && <Profile />}
 					{content == 2 && <Balance />}
-				</section>
+				</main>
 			) : (
-				<section className="overflow-auto position-fixed top-0" id="content">
+				<main className="overflow-auto position-fixed top-0" id="content">
 					{content == 0 && <Profile />}
 					{content == 1 && <Balance />}
-				</section>
+				</main>
 			)}
 		</>
 	);

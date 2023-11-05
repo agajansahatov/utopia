@@ -5,6 +5,8 @@ import Favourites from "../sections/Favourites";
 import WatchList from "../sections/WatchList";
 import OrderList from "../sections/OrderList";
 import { AppLink } from "../interfaces/AppLink";
+import NavbarTop from "../components/NavbarTop";
+import { getNavbarLinks } from "../config/NavbarLinks";
 
 const sidebarLinks: AppLink[] = [
 	{
@@ -33,6 +35,7 @@ const History = () => {
 		onLike,
 		isSidebarVisible,
 		onHideSidebar,
+		onShowSidebar,
 	} = useOutletContext<ContextType>();
 
 	let content = -1;
@@ -52,6 +55,8 @@ const History = () => {
 
 	return (
 		<>
+			<NavbarTop links={getNavbarLinks()} onShowSidebar={onShowSidebar} />
+
 			<Sidebar
 				elements={sidebarLinks}
 				root="/history/"
@@ -59,7 +64,7 @@ const History = () => {
 				isVisible={isSidebarVisible}
 				onHide={onHideSidebar}
 			/>
-			<section className="overflow-auto position-fixed top-0" id="content">
+			<main className="overflow-auto position-fixed top-0" id="content">
 				{content == 0 && <OrderList products={products} />}
 				{content == 1 && (
 					<Favourites
@@ -77,7 +82,7 @@ const History = () => {
 						onLike={onLike}
 					/>
 				)}
-			</section>
+			</main>
 		</>
 	);
 };

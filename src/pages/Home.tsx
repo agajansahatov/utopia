@@ -3,6 +3,8 @@ import Sidebar from "../components/Sidebar";
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import { ContextType } from "../App";
 import { AppLink } from "../interfaces/AppLink";
+import NavbarTop from "../components/NavbarTop";
+import { getNavbarLinks } from "../config/NavbarLinks";
 
 const sidebarLinks: AppLink[] = [
 	{
@@ -45,6 +47,7 @@ const Home = () => {
 		onLike,
 		isSidebarVisible,
 		onHideSidebar,
+		onShowSidebar,
 	} = useOutletContext<ContextType>();
 
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -70,6 +73,8 @@ const Home = () => {
 
 	return (
 		<>
+			<NavbarTop links={getNavbarLinks()} onShowSidebar={onShowSidebar} />
+
 			<Sidebar
 				isVisible={isSidebarVisible}
 				onHide={onHideSidebar}
@@ -77,14 +82,14 @@ const Home = () => {
 				active={category}
 			/>
 
-			<section className="overflow-auto position-fixed top-0" id="content">
+			<main className="overflow-auto position-fixed top-0" id="content">
 				<ProductList
 					products={productList}
 					favourites={favourites}
 					onAddToCart={(product) => onAddToCart(product)}
 					onLike={onLike}
 				/>
-			</section>
+			</main>
 		</>
 	);
 };

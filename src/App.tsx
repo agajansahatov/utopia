@@ -18,6 +18,7 @@ export interface ContextType {
 	onLike: (productId: number) => void;
 	isSidebarVisible: boolean;
 	onHideSidebar: () => void;
+	onShowSidebar: () => void;
 }
 
 const App = () => {
@@ -121,6 +122,7 @@ const App = () => {
 	};
 
 	const onHideSidebar = () => setIsSidebarVisible(false);
+	const onShowSidebar = () => setIsSidebarVisible(true);
 
 	useEffect(() => {
 		if (products.length == 0) {
@@ -149,38 +151,30 @@ const App = () => {
 
 	return (
 		<div className="d-flex" id="container">
-			<header id="navbar-top" className="position-fixed z-3">
-				<NavbarTop
-					links={getNavbarLinks()}
-					onShowSidebar={() => setIsSidebarVisible(true)}
-				/>
-			</header>
+			<Outlet
+				context={
+					{
+						products,
+						favourites,
+						onAddToCart,
+						onLike,
+						isSidebarVisible,
+						onHideSidebar,
+						onShowSidebar,
+					} satisfies ContextType
+				}
+			/>
 
-			<main>
-				<Outlet
-					context={
-						{
-							products,
-							favourites,
-							onAddToCart,
-							onLike,
-							isSidebarVisible,
-							onHideSidebar,
-						} satisfies ContextType
-					}
+			{user && (
+				<ShoppingCart
+					orders={orders}
+					visible={shoppingCartVisible}
+					onToggle={() => setShoppingCartVisible(!shoppingCartVisible)}
+					onClear={onClearShoppingCart}
+					onAdd={OnIncreaseOrderQuantity}
+					onDelete={OnDecreaseOrderQuantity}
 				/>
-
-				{user && (
-					<ShoppingCart
-						orders={orders}
-						visible={shoppingCartVisible}
-						onToggle={() => setShoppingCartVisible(!shoppingCartVisible)}
-						onClear={onClearShoppingCart}
-						onAdd={OnIncreaseOrderQuantity}
-						onDelete={OnDecreaseOrderQuantity}
-					/>
-				)}
-			</main>
+			)}
 		</div>
 	);
 };

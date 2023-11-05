@@ -1,5 +1,5 @@
 import Button from "react-bootstrap/Button";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { Col, Form, Row } from "react-bootstrap";
 import NavbarBottom from "./../components/NavbarBottom";
@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import axios from "axios";
 import { getBaseURL } from "../config/Configuration";
+import NavbarTop from "../components/NavbarTop";
+import { getNavbarLinks } from "../config/NavbarLinks";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -28,7 +30,7 @@ const schema = z.object({
 					return emailRegex.test(value);
 				}
 			},
-			{ message: "Must be a valid email" }
+			{ message: "Must be a valid email" },
 		),
 	password: z
 		.string()
@@ -77,8 +79,10 @@ const Login = () => {
 
 	return (
 		<>
-			<section className="text-light d-flex flex-column justify-content-center align-items-center login-form__container mb-5">
-				<div className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark">
+			<NavbarTop links={getNavbarLinks()} isFullWidth={true} />
+
+			<main className="login-form__container w-100 text-light">
+				<div className="bg-dark rounded login-form">
 					<h2 className="text-center mb-3">LOGIN</h2>
 					{serviceError && (
 						<p className="text-danger mb-1 text-center">{serviceError}</p>
@@ -86,9 +90,10 @@ const Login = () => {
 					<Form
 						onSubmit={handleSubmit((data) => {
 							onSubmit(data);
-							// reset();
+							reset();
 						})}
-						className="mb-2">
+						className="mb-2"
+					>
 						<Form.Group className="mb-3" controlId="contactInfoField">
 							<Form.Label>Email or Phone</Form.Label>
 							<Form.Control
@@ -111,12 +116,13 @@ const Login = () => {
 								<p className="text-danger">{errors.password.message}</p>
 							)}
 						</Form.Group>
-						<Row>
+						<Row className="mb-2">
 							<Col>
 								<Form.Group
 									className="mb-3 mx-auto"
 									controlId="rememberMe"
-									aria-checked>
+									aria-checked
+								>
 									<Form.Check
 										type="checkbox"
 										label="Remember Me"
@@ -138,13 +144,15 @@ const Login = () => {
 							</Button>
 							<Link
 								className="btn btn-outline-info btn-lg d-block"
-								to="/register">
+								to="/register"
+							>
 								Create account
 							</Link>
 						</div>
 					</Form>
 				</div>
-			</section>
+			</main>
+
 			<NavbarBottom />
 		</>
 	);
