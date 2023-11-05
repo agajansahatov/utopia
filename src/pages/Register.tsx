@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { User } from "../interfaces/User";
 import { getBaseURL } from "../config/Configuration";
+import NavbarTop from "../components/NavbarTop";
+import { getNavbarLinks } from "../config/NavbarLinks";
 
 const isPhoneNumber = (val: string) => {
 	return /^\d|\+/.test(val);
@@ -28,7 +30,7 @@ const schema = z.object({
 					return emailRegex.test(value);
 				}
 			},
-			{ message: "Must be a valid email" }
+			{ message: "Must be a valid email" },
 		),
 	address: z.string().min(1, { message: "Shipping Address is required" }),
 	password1: z
@@ -87,8 +89,10 @@ const Register = () => {
 
 	return (
 		<>
-			<section className="text-light d-flex flex-column justify-content-center align-items-center login-form__container mb-5">
-				<div className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark">
+			<NavbarTop links={getNavbarLinks()} isFullWidth={true} />
+
+			<main className="login-form__container w-100 text-light">
+				<div className="bg-dark rounded login-form">
 					<h3 className="text-center mb-3 fs-4">CREATE AN ACCOUNT</h3>
 					{serviceError && (
 						<p className="text-danger mb-0 text-center">{serviceError}</p>
@@ -98,7 +102,8 @@ const Register = () => {
 							onSubmit(data);
 							reset();
 						})}
-						className="mb-2">
+						className="mb-2"
+					>
 						<Form.Group className="mb-3" controlId="contactInfoField">
 							<Form.Label>Email or Phone</Form.Label>
 							<Form.Control
@@ -154,7 +159,7 @@ const Register = () => {
 						</Button>
 					</Form>
 				</div>
-			</section>
+			</main>
 			<NavbarBottom />
 		</>
 	);
