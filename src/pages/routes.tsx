@@ -7,7 +7,7 @@ import App from "../App";
 import Error404 from "./Error404";
 import PrivateRoutes from "./PrivateRoutes";
 import Register from "./Register";
-import ProductInfo from "../components/ProductInfo";
+import ProductInfo from "./ProductInfo";
 
 const router = createBrowserRouter([
 	{

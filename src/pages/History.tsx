@@ -59,7 +59,7 @@ const History = () => {
 				isVisible={isSidebarVisible}
 				onHide={onHideSidebar}
 			/>
-			<main className="content">
+			<section className="overflow-auto position-fixed top-0" id="content">
 				{content == 0 && <OrderList products={products} />}
 				{content == 1 && (
 					<Favourites
@@ -77,7 +77,7 @@ const History = () => {
 						onLike={onLike}
 					/>
 				)}
-			</main>
+			</section>
 		</>
 	);
 };

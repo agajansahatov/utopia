@@ -93,16 +93,16 @@ const Account = () => {
 			/>
 
 			{user && user.id === 1 ? (
-				<main className="content">
+				<section className="overflow-auto position-fixed top-0" id="content">
 					{content == 0 && <Admin />}
 					{content == 1 && <Profile />}
 					{content == 2 && <Balance />}
-				</main>
+				</section>
 			) : (
-				<main className="content">
+				<section className="overflow-auto position-fixed top-0" id="content">
 					{content == 0 && <Profile />}
 					{content == 1 && <Balance />}
-				</main>
+				</section>
 			)}
 		</>
 	);
