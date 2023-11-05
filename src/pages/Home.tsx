@@ -2,7 +2,6 @@ import ProductList from "../components/ProductList";
 import Sidebar from "../components/Sidebar";
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import { ContextType } from "../App";
-import { useState } from "react";
 import { AppLink } from "../interfaces/AppLink";
 
 const sidebarLinks: AppLink[] = [
@@ -39,8 +38,14 @@ const sidebarLinks: AppLink[] = [
 ];
 
 const Home = () => {
-	const { products, favourites, onAddToCart, onLike } =
-		useOutletContext<ContextType>();
+	const {
+		products,
+		favourites,
+		onAddToCart,
+		onLike,
+		isSidebarVisible,
+		onHideSidebar,
+	} = useOutletContext<ContextType>();
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	let category = 0;
@@ -59,20 +64,26 @@ const Home = () => {
 			? products
 			: products.filter(
 					(product) =>
-						product.category === sidebarLinks[category].label.toLowerCase()
+						product.category === sidebarLinks[category].label.toLowerCase(),
 			  );
 
 	return (
 		<>
-			<Sidebar elements={sidebarLinks} active={category} />;
-			<main className="content">
+			<Sidebar
+				isVisible={isSidebarVisible}
+				onHide={onHideSidebar}
+				elements={sidebarLinks}
+				active={category}
+			/>
+
+			<section className="overflow-auto position-fixed top-0" id="content">
 				<ProductList
 					products={productList}
 					favourites={favourites}
 					onAddToCart={(product) => onAddToCart(product)}
 					onLike={onLike}
 				/>
-			</main>
+			</section>
 		</>
 	);
 };
