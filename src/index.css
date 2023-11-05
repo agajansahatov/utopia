@@ -89,7 +89,7 @@
 	}
 }
 
-/* .products-list-field {
+.products-list-field {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 }
@@ -111,4 +111,4 @@
 .text-shadow {
 	text-shadow: 10px 10px 25px rgb(0, 0, 0), -10px 10px 25px rgb(0, 0, 0),
 		-10px -10px 25px rgb(0, 0, 0), 10px -10px 25px rgb(0, 0, 0);
-} */
+}

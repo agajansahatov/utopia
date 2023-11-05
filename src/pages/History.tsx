@@ -26,8 +26,14 @@ const sidebarLinks: AppLink[] = [
 
 const History = () => {
 	const { page } = useParams();
-	const { products, favourites, onAddToCart, onLike } =
-		useOutletContext<ContextType>();
+	const {
+		products,
+		favourites,
+		onAddToCart,
+		onLike,
+		isSidebarVisible,
+		onHideSidebar,
+	} = useOutletContext<ContextType>();
 
 	let content = -1;
 	if (!page) {
@@ -46,7 +52,13 @@ const History = () => {
 
 	return (
 		<>
-			<Sidebar elements={sidebarLinks} root="/history/" active={content} />
+			<Sidebar
+				elements={sidebarLinks}
+				root="/history/"
+				active={content}
+				isVisible={isSidebarVisible}
+				onHide={onHideSidebar}
+			/>
 			<main className="content">
 				{content == 0 && <OrderList products={products} />}
 				{content == 1 && (

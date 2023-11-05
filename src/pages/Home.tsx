@@ -46,6 +46,7 @@ const Home = () => {
 		isSidebarVisible,
 		onHideSidebar,
 	} = useOutletContext<ContextType>();
+
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	let category = 0;

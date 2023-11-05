@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Profile from "../sections/Profile";
 import Admin from "../sections/Admin";
@@ -6,7 +5,8 @@ import useAuth from "../hooks/useAuth";
 import { User } from "./../interfaces/User";
 import Balance from "../sections/Balance";
 import { AppLink } from "./../interfaces/AppLink";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
+import { ContextType } from "../App";
 
 let sidebarLinks: AppLink[] = [
 	{
@@ -28,6 +28,8 @@ let sidebarLinks: AppLink[] = [
 ];
 
 const Account = () => {
+	const { isSidebarVisible, onHideSidebar } = useOutletContext<ContextType>();
+
 	let logoutId = 2;
 	const user: User | null = useAuth();
 	if (user && user.id === 1) {
@@ -82,7 +84,14 @@ const Account = () => {
 
 	return (
 		<>
-			<Sidebar elements={sidebarLinks} root="/account/" active={content} />
+			<Sidebar
+				elements={sidebarLinks}
+				root="/account/"
+				active={content}
+				isVisible={isSidebarVisible}
+				onHide={onHideSidebar}
+			/>
+
 			{user && user.id === 1 ? (
 				<main className="content">
 					{content == 0 && <Admin />}

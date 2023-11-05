@@ -6,8 +6,15 @@ const PrivateRoutes = () => {
 	const user = useAuth();
 	if (!user) return <Navigate to="/login" />;
 
-	const { products, favourites, onAddToCart, onLike } =
-		useOutletContext<ContextType>();
+	const {
+		products,
+		favourites,
+		onAddToCart,
+		onLike,
+		isSidebarVisible,
+		onHideSidebar,
+	} = useOutletContext<ContextType>();
+
 	return (
 		<Outlet
 			context={
@@ -16,6 +23,8 @@ const PrivateRoutes = () => {
 					favourites,
 					onAddToCart,
 					onLike,
+					isSidebarVisible,
+					onHideSidebar,
 				} satisfies ContextType
 			}
 		/>
