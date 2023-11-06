@@ -98,13 +98,13 @@ const Account = () => {
 			/>
 
 			{user && user.id === 1 ? (
-				<main className="overflow-auto position-fixed top-0" id="content">
+				<main className="wrapper-fixed overflow-auto position-fixed top-0">
 					{content == 0 && <Admin />}
 					{content == 1 && <Profile />}
 					{content == 2 && <Balance />}
 				</main>
 			) : (
-				<main className="overflow-auto position-fixed top-0" id="content">
+				<main className="wrapper-fixed overflow-auto position-fixed top-0">
 					{content == 0 && <Profile />}
 					{content == 1 && <Balance />}
 				</main>

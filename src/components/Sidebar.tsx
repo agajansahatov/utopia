@@ -25,7 +25,7 @@ const Sidebar = ({
 	const { logo, name: appName, copyrightDate } = getBrand();
 
 	return (
-		<aside id="sidebar" className="position-fixed top-0 left-0">
+		<aside className="sidebar position-fixed top-0 left-0">
 			<Offcanvas
 				show={isVisible}
 				onHide={onHide}
@@ -61,7 +61,7 @@ const Sidebar = ({
 							<BsArrowLeft />
 						</Button>
 					</Navbar>
-					<div id="sidebar-body">
+					<div className="sidebar__body">
 						<Nav className="flex-column list-group rounded-0 m-3 mt-3 pb-5 mb-4">
 							{elements &&
 								elements.map((element) => (

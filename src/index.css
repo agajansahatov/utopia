@@ -23,6 +23,31 @@
 }
 
 /* wrapper-fixed is for the layout with the sidebar */
+.wrapper-fixed {
+	margin-top: var(--navbarHeight);
+	padding: 10px;
+}
+
+.sidebar__body,
+.wrapper-fixed {
+	height: calc(100vh - var(--navbarHeight));
+	overflow-y: auto;
+	padding-bottom: calc(var(--navbarHeight) + 10px);
+}
+
+.navbar-top,
+.wrapper-fixed {
+	width: 100%;
+}
+
+@media screen and (min-width: 992px) {
+	.navbar-top,
+	.wrapper-fixed {
+		width: calc(100% - var(--sidebarWidth));
+		left: var(--sidebarWidth);
+		padding-bottom: 10px;
+	}
+}
 
 /* login form */
 .form__container {
@@ -43,32 +68,6 @@
 	}
 }
 
-#content {
-	margin-top: var(--navbarHeight);
-	padding: 10px;
-}
-
-#sidebar-body,
-#content {
-	height: calc(100vh - var(--navbarHeight));
-	overflow-y: auto;
-	padding-bottom: calc(var(--navbarHeight) + 10px);
-}
-
-#navbar-top,
-#content {
-	width: 100%;
-}
-
-@media screen and (min-width: 992px) {
-	#navbar-top,
-	#content {
-		width: calc(100% - var(--sidebarWidth));
-		left: var(--sidebarWidth);
-		padding-bottom: 10px;
-	}
-}
-
 /* Scrolbar */
 *::-webkit-scrollbar {
 	width: 7px;
@@ -80,7 +79,7 @@
 }
 
 *::-webkit-scrollbar-track {
-	border-radius: 10px;
+	border-radius: 8px;
 	background: #393939;
 }
 
@@ -94,7 +93,7 @@
 	background: #fff;
 }
 
-#sidebar {
+.sidebar {
 	scrollbar-width: thin;
 }
 

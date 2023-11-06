@@ -64,7 +64,7 @@ const History = () => {
 				isVisible={isSidebarVisible}
 				onHide={onHideSidebar}
 			/>
-			<main className="overflow-auto position-fixed top-0" id="content">
+			<main className="wrapper-fixed overflow-auto position-fixed top-0">
 				{content == 0 && <OrderList products={products} />}
 				{content == 1 && (
 					<Favourites

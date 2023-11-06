@@ -82,7 +82,7 @@ const Home = () => {
 				active={category}
 			/>
 
-			<main className="overflow-auto position-fixed top-0" id="content">
+			<main className="wrapper-fixed overflow-auto position-fixed top-0">
 				<ProductList
 					products={productList}
 					favourites={favourites}

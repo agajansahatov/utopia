@@ -61,9 +61,10 @@ const NavbarTop = ({ links, onShowSidebar, isFullWidth = false }: Props) => {
 
 	return (
 		<header
-			id="navbar-top"
 			className={
-				isFullWidth ? "position-fixed z-3 w-100 start-0" : "position-fixed z-3"
+				isFullWidth
+					? "navbar-top position-fixed z-3 w-100 start-0"
+					: "navbar-top position-fixed z-3"
 			}
 		>
 			<Navbar
