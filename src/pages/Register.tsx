@@ -91,8 +91,8 @@ const Register = () => {
 		<>
 			<NavbarTop links={getNavbarLinks()} isFullWidth={true} />
 
-			<main className="login-form__container w-100 text-light">
-				<div className="bg-dark rounded login-form">
+			<main className="wrapper form__container text-light">
+				<div className="bg-dark rounded form">
 					<h3 className="text-center mb-3 fs-4">CREATE AN ACCOUNT</h3>
 					{serviceError && (
 						<p className="text-danger mb-0 text-center">{serviceError}</p>

@@ -7,7 +7,7 @@ import App from "../App";
 import Error404 from "./Error404";
 import PrivateRoutes from "./PrivateRoutes";
 import Register from "./Register";
-import ProductInfo from "./ProductInfo";
+import ProductDetails from "./ProductDetails";
 
 const router = createBrowserRouter([
 	{
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
 			{ index: true, element: <Home /> },
 			{ path: "login", element: <Login /> },
 			{ path: "register", element: <Register /> },
-			{ path: "product/:productId", element: <ProductInfo /> },
+			{ path: "product/:productId", element: <ProductDetails /> },
 			{
 				element: <PrivateRoutes />,
 				children: [

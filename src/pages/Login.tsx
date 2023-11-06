@@ -81,8 +81,8 @@ const Login = () => {
 		<>
 			<NavbarTop links={getNavbarLinks()} isFullWidth={true} />
 
-			<main className="login-form__container w-100 text-light">
-				<div className="bg-dark rounded login-form">
+			<main className="wrapper form__container text-light">
+				<div className="bg-dark rounded form">
 					<h2 className="text-center mb-3">LOGIN</h2>
 					{serviceError && (
 						<p className="text-danger mb-1 text-center">{serviceError}</p>
