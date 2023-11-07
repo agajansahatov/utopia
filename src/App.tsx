@@ -1,6 +1,4 @@
-import { getNavbarLinks } from "./config/NavbarLinks";
-import NavbarTop from "./components/NavbarTop";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ShoppingCart from "./components/ShoppingCart";
 import useAuth from "./hooks/useAuth";
@@ -31,7 +29,10 @@ const App = () => {
 	const user: User | null = useAuth();
 
 	const onAddToCart = (product: Product) => {
-		if (!user) return;
+		if (!user) {
+			window.location.pathname = "/login";
+			return;
+		}
 		// Check if the product's id already exists in orders
 		const orderIndex = orders.findIndex(
 			(order) => order.product === product.id,
@@ -42,7 +43,11 @@ const App = () => {
 			updatedOrders[orderIndex].quantity += 1;
 			setOrders(updatedOrders);
 		} else {
-			if (!user.id || !user.address) return;
+			if (!user.id || !user.address) {
+				console.log("No user info");
+				window.location.pathname = "/login";
+				return;
+			}
 			const newOrder: Order = {
 				user: user.id,
 				product: product.id,

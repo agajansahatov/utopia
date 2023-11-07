@@ -17,10 +17,10 @@ const ProductCard = ({ product, onAddToCart, onLike, isLiked }: Props) => {
 	const user: User | null = useAuth();
 
 	return (
-		<div className="card mb-4 pt-3" style={{ width: "23rem" }}>
+		<div className="card">
 			<img
 				src={getProductImageURL(product.image)}
-				className="card-img-top object-fit-contain px-3"
+				className="card-img-top object-fit-contain px-3 pt-3"
 				alt="Product image"
 			/>
 			<div className="card-body">
@@ -33,19 +33,22 @@ const ProductCard = ({ product, onAddToCart, onLike, isLiked }: Props) => {
 						? product.description.slice(0, 50) + "..."
 						: product.description}
 				</p>
-				<div className="d-flex align-items-center justify-content-between">
-					{user && (
-						<Like status={isLiked} onToggle={() => onLike(product.id)} />
-					)}
-					<span>
-						<Link to={"/product/" + product.id} className="btn btn-danger me-2">
-							Learn More
-						</Link>
-						<Button variant="primary" onClick={() => onAddToCart(product)}>
-							Add to cart
-						</Button>
-					</span>
-				</div>
+			</div>
+
+			<div className="card-footer d-flex align-items-center justify-content-between m-0">
+				{user && <Like status={isLiked} onToggle={() => onLike(product.id)} />}
+				<span className="text-end">
+					<Link to={"/product/" + product.id} className="btn btn-danger px-2">
+						Learn More
+					</Link>
+					<Button
+						className="px-2 m-1 me-0"
+						variant="primary"
+						onClick={() => onAddToCart(product)}
+					>
+						Add to cart
+					</Button>
+				</span>
 			</div>
 		</div>
 	);

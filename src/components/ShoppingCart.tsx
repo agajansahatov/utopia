@@ -44,9 +44,22 @@ const ShoppingCart = ({
 	});
 
 	const onPurchase = () => {
+		if (!user.balance) {
+			setServiceError("No User Info");
+			return;
+		}
+
+		let sum: number = 0;
 		orders.forEach((p) => {
 			p.status = "Paid";
+			sum += parseInt(p.price);
 		});
+
+		if (sum > parseInt(user.balance)) {
+			setServiceError("Your Balance is not enough!!!");
+			setToasterFailure(!toasterFailure);
+			return;
+		}
 
 		axios
 			.post(getBaseURL() + "products/purchased/new", orders)
@@ -73,7 +86,8 @@ const ShoppingCart = ({
 				onHide={onToggle}
 				backdrop="static"
 				keyboard={false}
-				fullscreen={true}>
+				fullscreen={true}
+			>
 				<Modal.Header closeButton>
 					<Modal.Title className="pe-none">Shopping Cart</Modal.Title>
 				</Modal.Header>
@@ -136,7 +150,8 @@ const ShoppingCart = ({
 						<Button
 							variant="primary"
 							onClick={onPurchase}
-							disabled={orders.length == 0}>
+							disabled={orders.length == 0}
+						>
 							BUY NOW
 						</Button>
 					</div>
@@ -146,14 +161,16 @@ const ShoppingCart = ({
 			<ToastContainer
 				className="p-3 z-1 position-fixed "
 				position="middle-center"
-				style={{ width: "240px" }}>
+				style={{ width: "240px" }}
+			>
 				<Toast
 					delay={3000}
 					autohide
 					className="bg-success text-white z-1 toast"
 					onClose={() => setToasterSuccess(!toasterSuccess)}
 					show={toasterSuccess}
-					style={{ boxShadow: "0 0 10px 10px #fff" }}>
+					style={{ boxShadow: "0 0 10px 10px #fff" }}
+				>
 					<Toast.Header>
 						<strong className="me-auto">Success</strong>
 						<small>Just now</small>
@@ -165,14 +182,16 @@ const ShoppingCart = ({
 			<ToastContainer
 				className="p-3 z-5 position-fixed "
 				position="middle-center"
-				style={{ width: "240px" }}>
+				style={{ width: "240px" }}
+			>
 				<Toast
 					delay={3000}
 					autohide
 					className="bg-danger text-white z-1 toast"
 					onClose={() => setToasterFailure(!toasterFailure)}
 					show={toasterFailure}
-					style={{ boxShadow: "0 0 10px 10px #fff" }}>
+					style={{ boxShadow: "0 0 10px 10px #fff" }}
+				>
 					<Toast.Header>
 						<strong className="me-auto">Failure</strong>
 						<small>Just now</small>

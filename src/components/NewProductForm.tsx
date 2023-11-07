@@ -16,14 +16,14 @@ const schema = z.object({
 		.refine((files) => files.length == 1, "Image is required!")
 		.refine(
 			(files) => files[0]?.size < 5 * 1024 * 1024,
-			"Max image size is 5MB"
+			"Max image size is 5MB",
 		)
 		.refine(
 			(files) =>
 				["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
-					files[0]?.type
+					files[0]?.type,
 				),
-			"Only jpeg, jpg, png or webp are accepted!"
+			"Only jpeg, jpg, png or webp are accepted!",
 		),
 	name: z.string().min(1),
 	description: z.string().min(1),
@@ -51,6 +51,11 @@ const NewProductForm = () => {
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
 	const onSubmit = (data: FieldValues) => {
+		if (data.description.length > 900) {
+			setServiceError("Description should be less than 900 characters");
+			return;
+		}
+
 		const formData = new FormData();
 		formData.append("file", data.image[0]);
 		formData.append("name", data.name);
@@ -71,6 +76,7 @@ const NewProductForm = () => {
 				if (res.data) {
 					setToaster(!toaster);
 					setServiceError("");
+					reset();
 				}
 			})
 			.catch((e) => {
@@ -83,14 +89,15 @@ const NewProductForm = () => {
 			<Form
 				onSubmit={handleSubmit((data) => {
 					onSubmit(data);
-					reset();
 				})}
 				className="mb-2"
-				encType="multipart/form-data">
+				encType="multipart/form-data"
+			>
 				<div className="d-flex justify-content-center">
 					<div
 						className="p-5 mx-2 mt-2 mb-3 rounded bg-dark"
-						style={{ minWidth: "500px" }}>
+						style={{ minWidth: "500px" }}
+					>
 						<h2 className="text-center mb-3">NEW PRODUCT</h2>
 						{serviceError && (
 							<p className="text-danger mb-1 text-center">{serviceError}</p>
@@ -159,14 +166,16 @@ const NewProductForm = () => {
 			<ToastContainer
 				className="p-3 z-1 position-fixed "
 				position="top-end"
-				style={{ width: "240px", marginTop: "75px" }}>
+				style={{ width: "240px", marginTop: "75px" }}
+			>
 				<Toast
 					delay={3000}
 					autohide
 					className="bg-success text-white z-1 toast"
 					onClose={() => setToaster(!toaster)}
 					show={toaster}
-					style={{ boxShadow: "0 0 10px 10px #fff" }}>
+					style={{ boxShadow: "0 0 10px 10px #fff" }}
+				>
 					<Toast.Header>
 						<strong className="me-auto">Success</strong>
 						<small>Just now</small>

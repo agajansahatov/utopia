@@ -97,14 +97,13 @@
 	scrollbar-width: thin;
 }
 
-.products-list-field {
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+.card {
+	max-width: 25rem;
+	margin: 10px 0;
 }
 
 .card-img-top {
 	height: 12rem;
-	width: auto;
 }
 
 .shopping-basket {
