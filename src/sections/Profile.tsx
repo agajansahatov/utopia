@@ -28,7 +28,7 @@ const schema = z.object({
 					return emailRegex.test(value);
 				}
 			},
-			{ message: "Must be a valid email" }
+			{ message: "Must be a valid email" },
 		)
 		.nullable(),
 	address: z.string().min(1).nullable(),
@@ -82,10 +82,8 @@ const Profile = () => {
 
 	return (
 		<>
-			<section className="text-light d-flex flex-column justify-content-center align-items-center login-form__container mb-5">
-				<div
-					className="login-form p-5 mx-2 mt-2 mb-3 rounded bg-dark"
-					style={{ minWidth: "700px" }}>
+			<section className="form__container text-light mt-5 mb-5 pb-5">
+				<div className="form rounded bg-dark m-0 p-4">
 					<h3 className="text-center mb-3 fs-4">EDIT YOUR PROFILE</h3>
 					{serviceError && (
 						<p className="text-danger mb-0 text-center">{serviceError}</p>
@@ -95,7 +93,7 @@ const Profile = () => {
 							onSubmit(data);
 							reset();
 						})}
-						className="mb-2">
+					>
 						<Form.Group className="mb-3" controlId="nameField">
 							<Form.Label>Name</Form.Label>
 							<Form.Control
