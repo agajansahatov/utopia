@@ -84,7 +84,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-	border-radius: 10px;
+	border-radius: 8px;
 	background: rgba(255, 255, 255, 0.7);
 	border: 1px solid #393939;
 }
@@ -97,6 +97,7 @@
 	scrollbar-width: thin;
 }
 
+/* ProductCard */
 .card {
 	max-width: 25rem;
 	margin: 10px 0;
@@ -105,6 +106,8 @@
 .card-img-top {
 	height: 12rem;
 }
+
+/* Shopping basket */
 
 .shopping-basket {
 	position: fixed;

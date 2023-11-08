@@ -90,14 +90,11 @@ const NewProductForm = () => {
 				onSubmit={handleSubmit((data) => {
 					onSubmit(data);
 				})}
-				className="mb-2"
+				className="mt-3 mb-5"
 				encType="multipart/form-data"
 			>
 				<div className="d-flex justify-content-center">
-					<div
-						className="p-5 mx-2 mt-2 mb-3 rounded bg-dark"
-						style={{ minWidth: "500px" }}
-					>
+					<div className="p-5 mx-2 mt-2 mb-3 rounded bg-dark">
 						<h2 className="text-center mb-3">NEW PRODUCT</h2>
 						{serviceError && (
 							<p className="text-danger mb-1 text-center">{serviceError}</p>
