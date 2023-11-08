@@ -83,7 +83,7 @@ const Profile = () => {
 	return (
 		<>
 			<section className="form__container text-light mt-5 mb-5 pb-5">
-				<div className="form rounded bg-dark m-0 p-4">
+				<div className="form rounded bg-dark m-0 p-4 p-md-5">
 					<h3 className="text-center mb-3 fs-4">EDIT YOUR PROFILE</h3>
 					{serviceError && (
 						<p className="text-danger mb-0 text-center">{serviceError}</p>
