@@ -3,6 +3,10 @@
 	--sidebarWidth: 300px;
 }
 
+.btn {
+	cursor: pointer;
+}
+
 .offcanvas-lg {
 	width: var(--sidebarWidth) !important;
 }
@@ -115,6 +119,7 @@
 }
 
 .order {
+	max-width: 100%;
 }
 
 .order__image {
@@ -125,6 +130,9 @@
 @media screen and (max-width: 400px) {
 	.order {
 		font-size: 12px;
+	}
+	.total-price {
+		font-size: 14px;
 	}
 }
 
