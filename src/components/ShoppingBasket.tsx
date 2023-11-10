@@ -9,18 +9,19 @@ interface Props {
 
 const ShoppingBasket = ({ onClick, numberOfProducts }: Props) => {
 	return (
-		<div className="shopping-basket">
-			<Button variant="dark" className="position-relative" onClick={onClick}>
+		<div className="shopping-basket position-fixed overflow-hidden">
+			<Button variant="warning" className="position-relative" onClick={onClick}>
 				<h5>
 					<Badge
 						bg="danger"
 						pill
 						className="position-absolute translate-middle"
-						style={{ top: "20px", left: "43px" }}>
+						style={{ top: "20px", left: "33px" }}
+					>
 						{numberOfProducts}
 					</Badge>
 				</h5>
-				<TfiShoppingCartFull color="" size="75" />
+				<TfiShoppingCartFull color="" size="50" />
 			</Button>
 		</div>
 	);

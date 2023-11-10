@@ -135,18 +135,16 @@
 	}
 }
 
-/* Shopping basket */
-
-.shopping-basket {
-	position: fixed;
-	bottom: 20px;
-	right: 20px;
-	border-radius: 20px;
-	overflow: hidden;
-	box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.8);
-}
-
+/* Balance */
 .text-shadow {
 	text-shadow: 10px 10px 25px rgb(0, 0, 0), -10px 10px 25px rgb(0, 0, 0),
 		-10px -10px 25px rgb(0, 0, 0), 10px -10px 25px rgb(0, 0, 0);
+}
+
+/* Shopping basket */
+.shopping-basket {
+	bottom: 10px;
+	right: 11px;
+	border-radius: 25px;
+	box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.8);
 }

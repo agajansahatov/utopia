@@ -69,7 +69,7 @@ const OrderList = ({ products }: Props) => {
 								</div>
 								<div className="d-flex flex-column justify-content-end">
 									<span className="d-sm-none text-nowrap">{o.date}</span>
-									<span className="badge rounded-pill text-bg-info text-nowrap fw-bold">
+									<span className="badge rounded-pill text-bg-warning text-nowrap fw-bold">
 										{o.status}
 									</span>
 								</div>
