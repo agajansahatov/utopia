@@ -1,5 +1,5 @@
 import { PurchasedProduct } from "../interfaces/PurchasedProduct";
-import { getBaseURL, getProductImageURL } from "./../config/Configuration";
+import { getBaseURL, getProductImageURL } from "../config/Configuration";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { User } from "../interfaces/User";
@@ -11,7 +11,7 @@ interface Props {
 	products: Product[];
 }
 
-const OrderList = ({ products }: Props) => {
+const Orders = ({ products }: Props) => {
 	const [purchasedProducts, setPurchasedProducts] = useState<
 		PurchasedProduct[]
 	>([]);
@@ -88,4 +88,4 @@ const OrderList = ({ products }: Props) => {
 	}
 };
 
-export default OrderList;
+export default Orders;

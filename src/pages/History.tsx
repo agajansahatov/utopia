@@ -3,7 +3,7 @@ import { useOutletContext, useParams } from "react-router-dom";
 import { ContextType } from "../App";
 import Favourites from "../sections/Favourites";
 import WatchList from "../sections/WatchList";
-import OrderList from "../sections/OrderList";
+import Orders from "../sections/Orders";
 import { AppLink } from "../interfaces/AppLink";
 import NavbarTop from "../components/NavbarTop";
 import { getNavbarLinks } from "../config/NavbarLinks";
@@ -65,7 +65,7 @@ const History = () => {
 				onHide={onHideSidebar}
 			/>
 			<main className="wrapper-fixed overflow-auto position-fixed top-0">
-				{content == 0 && <OrderList products={products} />}
+				{content == 0 && <Orders products={products} />}
 				{content == 1 && (
 					<Favourites
 						products={products}
