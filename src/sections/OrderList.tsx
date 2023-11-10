@@ -1,4 +1,3 @@
-import { Table } from "react-bootstrap";
 import { PurchasedProduct } from "../interfaces/PurchasedProduct";
 import { getBaseURL, getProductImageURL } from "./../config/Configuration";
 import { useEffect, useState } from "react";
@@ -47,43 +46,37 @@ const OrderList = ({ products }: Props) => {
 
 	if (Array.isArray(orders) && orders.length > 0) {
 		return (
-			<div className="d-flex flex-column align-items-center">
-				<h1 className="py-1 text-white">Orders</h1>
-				<Table
-					bordered
-					hover
-					variant="dark"
-					className="pe-none"
-					style={{ maxWidth: "1100px" }}>
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Image</th>
-							<th>Name</th>
-							<th>Price</th>
-							<th>Quantity</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-					<tbody>
-						{orders.map((order, index) => (
-							<tr className="pe-auto" key={index}>
-								<td>{index + 1}</td>
-								<td>
-									<img
-										src={getProductImageURL(order.image)}
-										style={{ width: "175px", maxHeight: "125px" }}
-										className="object-fit-contain"
-									/>
-								</td>
-								<td>{order.name}</td>
-								<td>${order.price}</td>
-								<td>{order.quantity}</td>
-								<td>{order.status}</td>
-							</tr>
-						))}
-					</tbody>
-				</Table>
+			<div className="orders p-2 pb-5 mb-5">
+				<h1 className="py-1 text-white text-center pb-2">Your Orders</h1>
+				{orders.map((o, i) => (
+					<div className="order row bg-dark m-0 p-2 py-3 mb-3 rounded" key={i}>
+						<div className="col-4">
+							<img
+								src={getProductImageURL(o.image)}
+								alt="Product image"
+								className="order__image object-fit-contain"
+							/>
+						</div>
+						<div className="col-8 d-flex flex-column justify-content-between">
+							<div className="d-flex justify-content-between">
+								<p className="lh-sm m-0 text-wrap">{o.name}</p>
+								<p className="d-none d-sm-block text-nowrap">{o.date}</p>
+							</div>
+							<div className="d-flex justify-content-between">
+								<div className="">
+									<p className="mb-0 text-nowrap">${o.price}</p>
+									<p className="mb-0 text-nowrap fw-bold">x{o.quantity}</p>
+								</div>
+								<div className="d-flex flex-column justify-content-end">
+									<span className="d-sm-none text-nowrap">{o.date}</span>
+									<span className="badge rounded-pill text-bg-info text-nowrap fw-bold">
+										{o.status}
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				))}
 			</div>
 		);
 	} else {

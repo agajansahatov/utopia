@@ -107,6 +107,34 @@
 	height: 12rem;
 }
 
+/* Orders */
+.orders {
+	max-width: 800px;
+	width: 100%;
+	margin: auto;
+}
+
+.order {
+}
+
+.order__image {
+	width: 100%;
+	max-height: 100px;
+}
+
+@media screen and (max-width: 400px) {
+	.order {
+		font-size: 12px;
+	}
+}
+
+@media screen and (min-width: 576px) {
+	.order__image {
+		width: 150px;
+		height: 150px;
+	}
+}
+
 /* Shopping basket */
 
 .shopping-basket {
