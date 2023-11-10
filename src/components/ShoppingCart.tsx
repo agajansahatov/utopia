@@ -1,14 +1,7 @@
 import useAuth from "../hooks/useAuth";
 import { User } from "../interfaces/User";
 import ShoppingBasket from "./ShoppingBasket";
-import {
-	Badge,
-	Button,
-	Modal,
-	Table,
-	Toast,
-	ToastContainer,
-} from "react-bootstrap";
+import { Badge, Button, Modal, Toast, ToastContainer } from "react-bootstrap";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { getBaseURL, getProductImageURL } from "../config/Configuration";
@@ -85,6 +78,8 @@ const ShoppingCart = ({
 			});
 	};
 
+	const ordersReversed = orders.slice().reverse();
+
 	return (
 		<>
 			<ShoppingBasket onClick={onToggle} numberOfProducts={numberOfOrders} />
@@ -99,12 +94,12 @@ const ShoppingCart = ({
 					<Modal.Title className="pe-none">Shopping Cart</Modal.Title>
 				</Modal.Header>
 				<Modal.Body className="p-0">
-					{orders.length == 0 ? (
+					{ordersReversed.length == 0 ? (
 						<p className="text-white">Your UTOPIA Cart is empty!</p>
 					) : (
 						<div className="orders p-1 p-sm-2 pb-5 mb-5">
 							<h1 className="py-1 text-white text-center pb-2">Your Orders</h1>
-							{orders.map((o, i) => (
+							{ordersReversed.map((o, i) => (
 								<div
 									className="order row bg-black m-0 p-2 py-3 mb-3 rounded"
 									key={i}

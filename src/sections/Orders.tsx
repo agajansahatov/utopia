@@ -45,10 +45,12 @@ const Orders = ({ products }: Props) => {
 	}
 
 	if (Array.isArray(orders) && orders.length > 0) {
+		const ordersReversed = orders.slice().reverse();
+
 		return (
 			<div className="orders p-2 pb-5 mb-5">
 				<h1 className="py-1 text-white text-center pb-2">Your Orders</h1>
-				{orders.map((o, i) => (
+				{ordersReversed.map((o, i) => (
 					<div className="order row bg-dark m-0 p-2 py-3 mb-3 rounded" key={i}>
 						<div className="col-4">
 							<img
