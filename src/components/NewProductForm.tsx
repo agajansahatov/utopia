@@ -1,5 +1,5 @@
 import { Button, ToastContainer } from "react-bootstrap";
-import { Navigate } from "react-router-dom";
+import { Navigate, useOutletContext } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { Form } from "react-bootstrap";
 import { FieldValues, useForm } from "react-hook-form";
@@ -9,6 +9,7 @@ import { useState } from "react";
 import axios from "axios";
 import Toast from "react-bootstrap/Toast";
 import { getBaseURL } from "../config/Configuration";
+import { ContextType } from "../App";
 
 const schema = z.object({
 	image: z
@@ -35,10 +36,10 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const NewProductForm = () => {
-	const [serviceError, setServiceError] = useState("");
-	const [toaster, setToaster] = useState(false);
-
 	const user = useAuth();
+	const { onSuccess } = useOutletContext<ContextType>();
+	const [serviceError, setServiceError] = useState("");
+
 	if (!user) {
 		return <Navigate to="/" />;
 	}
@@ -74,7 +75,7 @@ const NewProductForm = () => {
 			})
 			.then((res) => {
 				if (res.data) {
-					setToaster(!toaster);
+					onSuccess("A new product is added!");
 					setServiceError("");
 					reset();
 				}
@@ -160,26 +161,6 @@ const NewProductForm = () => {
 					</div>
 				</div>
 			</Form>
-			<ToastContainer
-				className="p-3 z-1 position-fixed "
-				position="top-end"
-				style={{ width: "240px", marginTop: "75px" }}
-			>
-				<Toast
-					delay={3000}
-					autohide
-					className="bg-success text-white z-1 toast"
-					onClose={() => setToaster(!toaster)}
-					show={toaster}
-					style={{ boxShadow: "0 0 10px 10px #fff" }}
-				>
-					<Toast.Header>
-						<strong className="me-auto">Success</strong>
-						<small>Just now</small>
-					</Toast.Header>
-					<Toast.Body>A new product is added!</Toast.Body>
-				</Toast>
-			</ToastContainer>
 		</>
 	);
 };

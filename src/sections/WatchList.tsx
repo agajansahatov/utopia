@@ -7,6 +7,8 @@ import { getBaseURL } from "../config/Configuration";
 import { Product } from "../interfaces/Product";
 import ProductList from "../components/ProductList";
 import { Favourite } from "../interfaces/Favourite";
+import { useOutletContext } from "react-router-dom";
+import { ContextType } from "../App";
 
 interface Props {
 	products: Product[];
@@ -16,9 +18,9 @@ interface Props {
 }
 
 const WatchList = ({ products, favourites, onAddToCart, onLike }: Props) => {
-	const [visitedProducts, setVisitedProducts] = useState<Visited[]>([]);
-	const [error, setError] = useState("");
 	const user: User | null = useAuth();
+	const { onError } = useOutletContext<ContextType>();
+	const [visitedProducts, setVisitedProducts] = useState<Visited[]>([]);
 
 	useEffect(() => {
 		if (user) {
@@ -28,7 +30,9 @@ const WatchList = ({ products, favourites, onAddToCart, onLike }: Props) => {
 					setVisitedProducts(res.data);
 				})
 				.catch((error) => {
-					setError(error.message);
+					onError(
+						`Couldn't fetch watchlist, because of the error "${error.message}"`,
+					);
 				});
 		}
 	}, []);

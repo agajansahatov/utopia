@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ShoppingCart from "./components/ShoppingCart";
 import useAuth from "./hooks/useAuth";
@@ -9,24 +9,31 @@ import { Favourite } from "./interfaces/Favourite";
 import { User } from "./interfaces/User";
 import { Order } from "./interfaces/Order";
 import { getDate } from "./utilities/Date";
+import { Toast, ToastContainer } from "react-bootstrap";
+
 export interface ContextType {
 	products: Product[];
 	favourites: Favourite[];
+	isSidebarVisible: boolean;
 	onAddToCart: (product: Product) => void;
 	onLike: (productId: number) => void;
-	isSidebarVisible: boolean;
 	onHideSidebar: () => void;
 	onShowSidebar: () => void;
+	onError: (msg: string) => void;
+	onSuccess: (msg: string) => void;
 }
 
 const App = () => {
+	const user: User | null = useAuth();
 	const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 	const [products, setProducts] = useState<Product[]>([]);
 	const [favourites, setFavourites] = useState<Favourite[]>([]);
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [shoppingCartVisible, setShoppingCartVisible] = useState(false);
 	const [error, setError] = useState("");
-	const user: User | null = useAuth();
+	const isError = error ? true : false;
+	const [success, setSuccess] = useState("");
+	const isSuccess = success ? true : false;
 
 	const onAddToCart = (product: Product) => {
 		if (!user) {
@@ -61,10 +68,6 @@ const App = () => {
 			};
 			setOrders([...orders, newOrder]);
 		}
-	};
-
-	const onClearShoppingCart = () => {
-		setOrders([]);
 	};
 
 	const OnIncreaseOrderQuantity = (orderIndex: number) => {
@@ -126,9 +129,6 @@ const App = () => {
 		}
 	};
 
-	const onHideSidebar = () => setIsSidebarVisible(false);
-	const onShowSidebar = () => setIsSidebarVisible(true);
-
 	useEffect(() => {
 		if (products.length == 0) {
 			axios
@@ -137,7 +137,9 @@ const App = () => {
 					setProducts(res.data);
 				})
 				.catch((error) => {
-					setError(error.message);
+					setError(
+						`Couldn't fetch products, because of the error "${error.message}"`,
+					);
 				});
 		}
 
@@ -149,7 +151,9 @@ const App = () => {
 					setFavourites(res.data);
 				})
 				.catch((error) => {
-					setError(error.message);
+					setError(
+						`Couldn't fetch favourites list, because of the error "${error.message}"`,
+					);
 				});
 		}
 	}, []);
@@ -162,10 +166,12 @@ const App = () => {
 						products,
 						favourites,
 						onAddToCart,
+						onError: setError,
+						onHideSidebar: () => setIsSidebarVisible(false),
 						onLike,
 						isSidebarVisible,
-						onHideSidebar,
-						onShowSidebar,
+						onShowSidebar: () => setIsSidebarVisible(true),
+						onSuccess: setSuccess,
 					} satisfies ContextType
 				}
 			/>
@@ -175,11 +181,53 @@ const App = () => {
 					orders={orders}
 					visible={shoppingCartVisible}
 					onToggle={() => setShoppingCartVisible(!shoppingCartVisible)}
-					onClear={onClearShoppingCart}
+					onClear={() => setOrders([])}
 					onAdd={OnIncreaseOrderQuantity}
 					onDelete={OnDecreaseOrderQuantity}
+					onError={setError}
+					onSuccess={setSuccess}
 				/>
 			)}
+
+			{/* Error Toaster */}
+			<ToastContainer
+				className="status-toaster p-3 position-fixed "
+				position="middle-center"
+			>
+				<Toast
+					// delay={3000}
+					// autohide
+					className="bg-danger text-white z-1 toast"
+					onClose={() => setError("")}
+					show={isError}
+					style={{ boxShadow: "0 0 10px 0 #fff" }}
+				>
+					<Toast.Header>
+						<strong className="me-auto">Failure</strong>
+					</Toast.Header>
+					<Toast.Body className="text-center">{error}</Toast.Body>
+				</Toast>
+			</ToastContainer>
+
+			{/* Success Toaster */}
+			<ToastContainer
+				className="status-toaster p-3 position-fixed"
+				position="middle-center"
+			>
+				<Toast
+					// delay={3000}
+					// autohide
+					className="bg-success text-white z-1 toast"
+					onClose={() => setSuccess("")}
+					show={isSuccess}
+					style={{ boxShadow: "0 0 10px 0px #fff" }}
+				>
+					<Toast.Header>
+						<strong className="me-auto">Success</strong>
+					</Toast.Header>
+					<Toast.Body className="text-center">{success}</Toast.Body>
+				</Toast>
+			</ToastContainer>
 		</>
 	);
 };

@@ -1,9 +1,8 @@
 import useAuth from "../hooks/useAuth";
 import { User } from "../interfaces/User";
 import ShoppingBasket from "./ShoppingBasket";
-import { Badge, Button, Modal, Toast, ToastContainer } from "react-bootstrap";
+import { Badge, Button, Modal } from "react-bootstrap";
 import axios, { AxiosError } from "axios";
-import { useState } from "react";
 import { getBaseURL, getProductImageURL } from "../config/Configuration";
 import { Order } from "../interfaces/Order";
 
@@ -14,6 +13,8 @@ interface Props {
 	onClear: () => void;
 	onAdd: (orderIndex: number) => void;
 	onDelete: (orderIndex: number) => void;
+	onError: (msg: string) => void;
+	onSuccess: (msg: string) => void;
 }
 
 const ShoppingCart = ({
@@ -23,10 +24,9 @@ const ShoppingCart = ({
 	onClear,
 	onAdd,
 	onDelete,
+	onError,
+	onSuccess,
 }: Props) => {
-	const [toasterSuccess, setToasterSuccess] = useState(false);
-	const [toasterFailure, setToasterFailure] = useState(false);
-	const [serviceError, setServiceError] = useState("");
 	const user: User | null = useAuth();
 
 	if (!user) return;
@@ -39,10 +39,7 @@ const ShoppingCart = ({
 	});
 
 	const onPurchase = () => {
-		if (!user.balance) {
-			setServiceError("No User Info");
-			return;
-		}
+		if (!user.balance) return;
 
 		const purchasedOrders = [...orders].map((order) => ({
 			...order,
@@ -50,8 +47,7 @@ const ShoppingCart = ({
 		}));
 
 		if (totalPrice > parseInt(user.balance)) {
-			setServiceError("Your Balance is not enough!!!");
-			setToasterFailure(!toasterFailure);
+			onError("Your balance is not enough!");
 			return;
 		}
 
@@ -59,8 +55,7 @@ const ShoppingCart = ({
 			.post(getBaseURL() + "products/purchased/new", purchasedOrders)
 			.then((res) => {
 				if (res.data == false) {
-					setServiceError("Bad Request!");
-					setToasterFailure(!toasterFailure);
+					onError("Purchase failed!");
 				} else {
 					if (user.balance) {
 						let balance = parseInt(user.balance) - totalPrice;
@@ -69,13 +64,12 @@ const ShoppingCart = ({
 						localStorage.setItem("user", JSON.stringify(user));
 					}
 					onToggle();
-					setToasterSuccess(!toasterSuccess);
 					onClear();
+					onSuccess("Purchase is successful!");
 				}
 			})
 			.catch((e: AxiosError) => {
-				setServiceError(e.message);
-				setToasterFailure(!toasterFailure);
+				onError(`Purchase failed, because of the error "${e.message}"`);
 			});
 	};
 
@@ -83,7 +77,6 @@ const ShoppingCart = ({
 
 	return (
 		<>
-			<ShoppingBasket onClick={onToggle} numberOfProducts={numberOfOrders} />
 			<Modal
 				show={visible}
 				onHide={onToggle}
@@ -125,7 +118,7 @@ const ShoppingCart = ({
 													<Button
 														className="py-0 px-2 btn-sm"
 														variant="dark"
-														onClick={() => onDelete(i)}
+														onClick={() => onDelete(o.product)}
 													>
 														-
 													</Button>
@@ -135,7 +128,7 @@ const ShoppingCart = ({
 													<Button
 														className="py-0 px-2 btn-sm"
 														variant="dark"
-														onClick={() => onAdd(i)}
+														onClick={() => onAdd(o.product)}
 													>
 														+
 													</Button>
@@ -179,45 +172,7 @@ const ShoppingCart = ({
 				</Modal.Footer>
 			</Modal>
 
-			<ToastContainer
-				className="status-toaster p-3 position-fixed"
-				position="middle-center"
-			>
-				<Toast
-					delay={3000}
-					autohide
-					className="bg-success text-white z-1 toast"
-					onClose={() => setToasterSuccess(!toasterSuccess)}
-					show={toasterSuccess}
-					style={{ boxShadow: "0 0 10px 10px #fff" }}
-				>
-					<Toast.Header>
-						<strong className="me-auto">Success</strong>
-						<small>Just now</small>
-					</Toast.Header>
-					<Toast.Body>Purchase is successfull!</Toast.Body>
-				</Toast>
-			</ToastContainer>
-
-			<ToastContainer
-				className="status-toaster p-3 position-fixed "
-				position="middle-center"
-			>
-				<Toast
-					delay={3000}
-					autohide
-					className="bg-danger text-white z-1 toast"
-					onClose={() => setToasterFailure(!toasterFailure)}
-					show={toasterFailure}
-					style={{ boxShadow: "0 0 10px 10px #fff" }}
-				>
-					<Toast.Header>
-						<strong className="me-auto">Failure</strong>
-						<small>Just now</small>
-					</Toast.Header>
-					<Toast.Body>{serviceError}</Toast.Body>
-				</Toast>
-			</ToastContainer>
+			<ShoppingBasket onClick={onToggle} numberOfProducts={numberOfOrders} />
 		</>
 	);
 };

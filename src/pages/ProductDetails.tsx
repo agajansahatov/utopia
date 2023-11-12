@@ -24,11 +24,11 @@ import { TfiMoreAlt } from "react-icons/tfi";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 
 const ProductDetails = () => {
-	const { onAddToCart, onLike, favourites } = useOutletContext<ContextType>();
-	const { productId } = useParams();
+	const { onAddToCart, onLike, favourites, onError } =
+		useOutletContext<ContextType>();
 	const user: User | null = useAuth();
+	const { productId } = useParams();
 	const [id, setId] = useState(-1);
-	const [error, setError] = useState("");
 	const [product, setProduct] = useState<Product>();
 	const [isDescriptionFull, setIsDescriptionFull] = useState(false);
 	const [likedCount, setLikedCount] = useState(0);
@@ -55,7 +55,9 @@ const ProductDetails = () => {
 					}
 				})
 				.catch((error) => {
-					setError(error.message);
+					onError(
+						`Couldn't fetch product details, because of the error "${error.message}"`,
+					);
 				});
 
 			axios
@@ -64,7 +66,9 @@ const ProductDetails = () => {
 					setLikedCount(res.data);
 				})
 				.catch((error) => {
-					setError(error.message);
+					onError(
+						`Couldn't fetch number of likes, because of the error "${error.message}"`,
+					);
 				});
 			axios
 				.get(`${getBaseURL()}visited/count/${id}`)
@@ -72,12 +76,20 @@ const ProductDetails = () => {
 					setVisitedCount(res.data);
 				})
 				.catch((error) => {
-					setError(error.message);
+					onError(
+						`Couldn't fetch count of visites, because of the error "${error.message}"`,
+					);
 				});
 		}
 	}, [id]);
 
-	if (!product) return;
+	if (!product)
+		return (
+			<>
+				<NavbarTop links={getNavbarLinks()} isFullWidth={true} />
+				<NavbarBottom />
+			</>
+		);
 
 	const defaultDescLength = 250;
 	const descriptionLength = isDescriptionFull

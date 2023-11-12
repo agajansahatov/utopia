@@ -6,31 +6,9 @@ const PrivateRoutes = () => {
 	const user = useAuth();
 	if (!user) return <Navigate to="/login" />;
 
-	const {
-		products,
-		favourites,
-		onAddToCart,
-		onLike,
-		isSidebarVisible,
-		onHideSidebar,
-		onShowSidebar,
-	} = useOutletContext<ContextType>();
+	const context = useOutletContext<ContextType>();
 
-	return (
-		<Outlet
-			context={
-				{
-					products,
-					favourites,
-					onAddToCart,
-					onLike,
-					isSidebarVisible,
-					onHideSidebar,
-					onShowSidebar,
-				} satisfies ContextType
-			}
-		/>
-	);
+	return <Outlet context={context} />;
 };
 
 export default PrivateRoutes;
