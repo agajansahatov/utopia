@@ -6,15 +6,18 @@ const NavbarBottom = () => {
 	const { logo, name: appName, copyrightDate } = getBrand();
 	return (
 		<Navbar
-			className="px-2 px-md-4 py-3 bg-gradient"
+			className={"px-2 px-md-4 py-3 bg-gradient"}
 			bg="black"
 			data-bs-theme="dark"
-			fixed="bottom"
 			expand="md"
 			variant="dark"
+			fixed="bottom"
 		>
 			<Nav className="mx-auto fs-6 text-center">
-				{appName} &copy; {copyrightDate} &nbsp; All Rights Reserved
+				<span>
+					{appName} &copy; {copyrightDate}
+				</span>
+				<span>All Rights Reserved</span>
 			</Nav>
 		</Navbar>
 	);

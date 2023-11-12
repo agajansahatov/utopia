@@ -31,7 +31,6 @@ const Sidebar = ({
 				onHide={onHide}
 				responsive="lg"
 				scroll={true}
-				backdrop="static"
 				className="bg-dark text-white vh-100 overflow-hidden sticky-lg-top"
 			>
 				<Offcanvas.Body className="p-0 m-0 d-block">

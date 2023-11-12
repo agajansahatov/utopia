@@ -60,52 +60,49 @@ const NavbarTop = ({ links, onShowSidebar, isFullWidth = false }: Props) => {
 	};
 
 	return (
-		<header
+		<Navbar
+			bg="black"
+			variant="dark"
+			expand="lg"
+			fixed="top"
 			className={
 				isFullWidth
-					? "navbar-top position-fixed z-3 w-100 start-0"
-					: "navbar-top position-fixed z-3"
+					? "navbar-top z-3 px-2 px-md-4 bg-gradient w-100 start-0"
+					: "navbar-top z-3 px-2 px-md-4 bg-gradient"
 			}
 		>
-			<Navbar
-				className="px-2 px-md-4 bg-gradient"
-				bg="black"
-				variant="dark"
-				expand="lg"
+			<span
+				className={
+					isFullWidth
+						? "d-flex align-items-center"
+						: "d-flex align-items-center d-lg-none"
+				}
 			>
-				<span
-					className={
-						isFullWidth
-							? "d-flex align-items-center"
-							: "d-flex align-items-center d-lg-none"
-					}
-				>
-					<Navbar.Brand as={NavLink} to="/">
-						<img
-							className="d-inline-block align-middle logo"
-							src={logo}
-							height="35"
-							alt=""
-						/>
-						<span className="align-middle ms-2">{appName}</span>
-					</Navbar.Brand>
-					{!isFullWidth && (
-						<Button
-							type="button"
-							variant="outline-dark"
-							className="text-white pb-2 border-0 m-1"
-							onClick={onShowSidebar}
-						>
-							<BsArrowRight />
-						</Button>
-					)}
-				</span>
-				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
-				<Navbar.Collapse id="responsive-navbar-nav">
-					<Nav className="ms-auto fs-5">{getRelatedLinks(user != null)}</Nav>
-				</Navbar.Collapse>
-			</Navbar>
-		</header>
+				<Navbar.Brand as={NavLink} to="/">
+					<img
+						className="d-inline-block align-middle logo"
+						src={logo}
+						height="35"
+						alt=""
+					/>
+					<span className="align-middle ms-2">{appName}</span>
+				</Navbar.Brand>
+				{!isFullWidth && (
+					<Button
+						type="button"
+						variant="outline-dark"
+						className="text-white pb-2 border-0 m-1"
+						onClick={onShowSidebar}
+					>
+						<BsArrowRight />
+					</Button>
+				)}
+			</span>
+			<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+			<Navbar.Collapse id="responsive-navbar-nav">
+				<Nav className="ms-auto fs-5">{getRelatedLinks(user != null)}</Nav>
+			</Navbar.Collapse>
+		</Navbar>
 	);
 };
 

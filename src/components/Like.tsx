@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 interface Props {
@@ -13,7 +12,7 @@ const Like = ({ status, onToggle }: Props) => {
 				color="#ff475a"
 				size={36}
 				onClick={onToggle}
-				style={{ cursor: "pointer" }}
+				className="btnLike"
 			/>
 		);
 	else
@@ -21,7 +20,8 @@ const Like = ({ status, onToggle }: Props) => {
 			<AiOutlineHeart
 				size={36}
 				onClick={onToggle}
-				style={{ cursor: "pointer" }}
+				color="inherit"
+				className="btnLike"
 			/>
 		);
 };

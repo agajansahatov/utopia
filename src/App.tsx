@@ -155,7 +155,7 @@ const App = () => {
 	}, []);
 
 	return (
-		<div className="d-flex" id="container">
+		<>
 			<Outlet
 				context={
 					{
@@ -180,7 +180,7 @@ const App = () => {
 					onDelete={OnDecreaseOrderQuantity}
 				/>
 			)}
-		</div>
+		</>
 	);
 };
 

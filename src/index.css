@@ -3,8 +3,14 @@
 	--sidebarWidth: 300px;
 }
 
-.btn {
+.btn,
+.btnLike {
 	cursor: pointer;
+}
+
+.btnLike:hover {
+	opacity: 0.7;
+	transition: color 0.3s ease-in-out;
 }
 
 .offcanvas-lg {
@@ -24,6 +30,7 @@
 	width: 100%;
 	min-height: calc(100vh - 2 * var(--navbarHeight));
 	margin: var(--navbarHeight) 0;
+	box-style: border-box;
 }
 
 /* wrapper-fixed is for the layout with the sidebar */
@@ -39,7 +46,6 @@
 	padding-bottom: calc(var(--navbarHeight) + 10px);
 }
 
-.navbar-top,
 .wrapper-fixed {
 	width: 100%;
 }
@@ -49,7 +55,6 @@
 	.wrapper-fixed {
 		width: calc(100% - var(--sidebarWidth));
 		left: var(--sidebarWidth);
-		padding-bottom: 10px;
 	}
 }
 
@@ -154,5 +159,40 @@
 	bottom: 10px;
 	right: 11px;
 	border-radius: 25px;
-	box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.8);
+	box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.2);
+	z-index: 10000;
+}
+
+.status-toaster {
+	z-index: 99999;
+	width: 200px;
+}
+
+@media screen and (min-width: 576px) {
+	.status-toaster {
+		width: 250px;
+	}
+}
+
+.shopping-cart {
+	z-index: 11111;
+}
+
+.product-details {
+	width: 96%;
+	max-width: 1000px;
+	margin: auto;
+}
+
+.product-details__body {
+}
+
+.product-details__image {
+	width: 100%;
+	max-height: 60vh;
+}
+
+.product-details__btn {
+	width: 120px;
+	height: 40px;
 }

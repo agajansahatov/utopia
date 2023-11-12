@@ -44,9 +44,10 @@ const ShoppingCart = ({
 			return;
 		}
 
-		orders.forEach((p) => {
-			p.status = "Paid";
-		});
+		const purchasedOrders = [...orders].map((order) => ({
+			...order,
+			status: "Paid",
+		}));
 
 		if (totalPrice > parseInt(user.balance)) {
 			setServiceError("Your Balance is not enough!!!");
@@ -55,7 +56,7 @@ const ShoppingCart = ({
 		}
 
 		axios
-			.post(getBaseURL() + "products/purchased/new", orders)
+			.post(getBaseURL() + "products/purchased/new", purchasedOrders)
 			.then((res) => {
 				if (res.data == false) {
 					setServiceError("Bad Request!");
@@ -89,6 +90,7 @@ const ShoppingCart = ({
 				backdrop="static"
 				keyboard={false}
 				fullscreen={true}
+				className="shopping-cart rounded-0"
 			>
 				<Modal.Header closeButton>
 					<Modal.Title className="pe-none">Shopping Cart</Modal.Title>
@@ -101,7 +103,7 @@ const ShoppingCart = ({
 							<h1 className="py-1 text-white text-center pb-2">Your Orders</h1>
 							{ordersReversed.map((o, i) => (
 								<div
-									className="order row bg-black m-0 p-2 py-3 mb-3 rounded"
+									className="order row bg-dark-subtle m-0 p-2 py-3 mb-3 rounded"
 									key={i}
 								>
 									<div className="col-4">
@@ -178,9 +180,8 @@ const ShoppingCart = ({
 			</Modal>
 
 			<ToastContainer
-				className="p-3 z-1 position-fixed "
+				className="status-toaster p-3 position-fixed"
 				position="middle-center"
-				style={{ width: "240px" }}
 			>
 				<Toast
 					delay={3000}
@@ -199,9 +200,8 @@ const ShoppingCart = ({
 			</ToastContainer>
 
 			<ToastContainer
-				className="p-3 z-5 position-fixed "
+				className="status-toaster p-3 position-fixed "
 				position="middle-center"
-				style={{ width: "240px" }}
 			>
 				<Toast
 					delay={3000}
