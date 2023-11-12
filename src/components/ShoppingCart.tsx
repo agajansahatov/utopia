@@ -118,7 +118,7 @@ const ShoppingCart = ({
 													<Button
 														className="py-0 px-2 btn-sm"
 														variant="dark"
-														onClick={() => onDelete(o.product)}
+														onClick={() => onDelete(orders.length - 1 - i)}
 													>
 														-
 													</Button>
@@ -128,7 +128,7 @@ const ShoppingCart = ({
 													<Button
 														className="py-0 px-2 btn-sm"
 														variant="dark"
-														onClick={() => onAdd(o.product)}
+														onClick={() => onAdd(orders.length - 1 - i)}
 													>
 														+
 													</Button>
