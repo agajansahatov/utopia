@@ -14,6 +14,7 @@ import { Toast, ToastContainer } from "react-bootstrap";
 export interface ContextType {
 	products: Product[];
 	favourites: Favourite[];
+	error: string;
 	isSidebarVisible: boolean;
 	isLoading: boolean;
 	onAddToCart: (product: Product) => void;
@@ -32,9 +33,8 @@ const App = () => {
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [shoppingCartVisible, setShoppingCartVisible] = useState(false);
 	const [error, setError] = useState("");
-	const isError = error ? true : false;
 	const [success, setSuccess] = useState("");
-	const isSuccess = success ? true : false;
+	const [isToasterVisible, setIsToasterVisible] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const onAddToCart = (product: Product) => {
@@ -170,6 +170,7 @@ const App = () => {
 					{
 						products,
 						favourites,
+						error,
 						onAddToCart,
 						onError: setError,
 						onHideSidebar: () => setIsSidebarVisible(false),

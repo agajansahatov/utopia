@@ -6,26 +6,54 @@ import { User } from "../interfaces/User";
 import useAuth from "../hooks/useAuth";
 import { Product } from "../interfaces/Product";
 import { Order } from "../interfaces/Order";
+import { Spinner } from "react-bootstrap";
+import { useOutletContext } from "react-router-dom";
+import { ContextType } from "../App";
 
 interface Props {
 	products: Product[];
 }
 
 const Orders = ({ products }: Props) => {
+	const { isLoading, error, onError } = useOutletContext<ContextType>();
 	const [purchasedProducts, setPurchasedProducts] = useState<
 		PurchasedProduct[]
 	>([]);
+	const [isPurchasedLoading, setIsPurchasedLoading] = useState(false);
 
 	const user: User | null = useAuth();
 	if (!user) return;
 
 	useEffect(() => {
-		axios.post(getBaseURL() + "products/purchased/all", user).then((res) => {
-			if (res.data !== null) {
-				setPurchasedProducts(res.data);
-			}
-		});
+		setIsPurchasedLoading(true);
+		axios
+			.post(getBaseURL() + "products/purchased/all", user)
+			.then((res) => {
+				if (res.data !== null) {
+					setPurchasedProducts(res.data);
+				}
+				setIsPurchasedLoading(false);
+			})
+			.catch((error) => {
+				setIsPurchasedLoading(false);
+				onError(`Couldn't fetch orders, because ${error}`);
+			});
 	}, []);
+
+	if (
+		(!products.length && isLoading) ||
+		(!purchasedProducts.length && isPurchasedLoading)
+	) {
+		return (
+			<main className="wrapper text-center">
+				<Spinner
+					animation="border"
+					className="my-5"
+					style={{ width: 50, height: 50 }}
+				/>
+			</main>
+		);
+	}
 
 	const orders: Order[] = [];
 
@@ -81,12 +109,14 @@ const Orders = ({ products }: Props) => {
 				))}
 			</div>
 		);
-	} else {
+	} else if (!error) {
 		return (
 			<h2 className="py-1 text-white text-center">
 				You don't have ony orders!
 			</h2>
 		);
+	} else {
+		return;
 	}
 };
 

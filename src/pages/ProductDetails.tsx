@@ -14,7 +14,7 @@ import { User } from "../interfaces/User";
 import NavbarTop from "../components/NavbarTop";
 import { getNavbarLinks } from "../config/NavbarLinks";
 import NavbarBottom from "../components/NavbarBottom";
-import { Button } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { ContextType } from "../App";
 import Like from "../components/Like";
 import { BiSolidCategoryAlt } from "react-icons/bi";
@@ -33,6 +33,7 @@ const ProductDetails = () => {
 	const [isDescriptionFull, setIsDescriptionFull] = useState(false);
 	const [likedCount, setLikedCount] = useState(0);
 	const [visitedCount, setVisitedCount] = useState(0);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		if (id !== Number(productId)) {
@@ -42,6 +43,7 @@ const ProductDetails = () => {
 
 	useEffect(() => {
 		if (id !== -1) {
+			setIsLoading(true);
 			axios
 				.get(`${getBaseURL()}products/${id}`)
 				.then((res) => {
@@ -53,11 +55,14 @@ const ProductDetails = () => {
 							product: productId,
 						});
 					}
+
+					setIsLoading(false);
 				})
 				.catch((error) => {
 					onError(
 						`Couldn't fetch product details, because of the error "${error.message}"`,
 					);
+					setIsLoading(false);
 				});
 
 			axios
@@ -83,13 +88,23 @@ const ProductDetails = () => {
 		}
 	}, [id]);
 
-	if (!product)
+	if (!product) {
 		return (
 			<>
 				<NavbarTop links={getNavbarLinks()} isFullWidth={true} />
+				{isLoading && (
+					<main className="wrapper text-center">
+						<Spinner
+							animation="border"
+							className="my-5"
+							style={{ width: 50, height: 50 }}
+						/>
+					</main>
+				)}
 				<NavbarBottom />
 			</>
 		);
+	}
 
 	const defaultDescLength = 250;
 	const descriptionLength = isDescriptionFull
