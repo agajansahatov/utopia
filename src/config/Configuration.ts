@@ -12,6 +12,7 @@ export function getBrand() {
 
 export function getBaseURL() {
 	return "https://utopia-api-x4re.onrender.com/";
+	// return "http://localhost:8080/";
 }
 
 export function getProductImageURL(imageName: string) {

@@ -20,8 +20,6 @@ const ProductList = ({
 }: Props) => {
 	const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-	console.log(products);
-
 	if (products.length == 0 && isLoading == true) {
 		return (
 			<div className="row w-100 p-0 m-0">
