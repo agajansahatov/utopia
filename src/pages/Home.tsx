@@ -43,9 +43,10 @@ const Home = () => {
 	const {
 		products,
 		favourites,
+		isSidebarVisible,
+		isLoading,
 		onAddToCart,
 		onLike,
-		isSidebarVisible,
 		onHideSidebar,
 		onShowSidebar,
 	} = useOutletContext<ContextType>();
@@ -86,6 +87,7 @@ const Home = () => {
 				<ProductList
 					products={productList}
 					favourites={favourites}
+					isLoading={isLoading}
 					onAddToCart={(product) => onAddToCart(product)}
 					onLike={onLike}
 				/>

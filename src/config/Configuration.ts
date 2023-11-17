@@ -11,7 +11,7 @@ export function getBrand() {
 }
 
 export function getBaseURL() {
-	return "http://192.168.31.8:8080/";
+	return "https://utopia-api-x4re.onrender.com/";
 }
 
 export function getProductImageURL(imageName: string) {

@@ -110,6 +110,7 @@
 .card {
 	max-width: 25rem;
 	margin: 10px 0;
+	min-width: 230px;
 }
 
 .card-img-top {

@@ -15,6 +15,7 @@ export interface ContextType {
 	products: Product[];
 	favourites: Favourite[];
 	isSidebarVisible: boolean;
+	isLoading: boolean;
 	onAddToCart: (product: Product) => void;
 	onLike: (productId: number) => void;
 	onHideSidebar: () => void;
@@ -34,6 +35,7 @@ const App = () => {
 	const isError = error ? true : false;
 	const [success, setSuccess] = useState("");
 	const isSuccess = success ? true : false;
+	const [isLoading, setIsLoading] = useState(false);
 
 	const onAddToCart = (product: Product) => {
 		if (!user) {
@@ -131,15 +133,18 @@ const App = () => {
 
 	useEffect(() => {
 		if (products.length == 0) {
+			setIsLoading(true);
 			axios
 				.get(getBaseURL() + "products")
 				.then((res) => {
 					setProducts(res.data);
+					setIsLoading(false);
 				})
 				.catch((error) => {
 					setError(
 						`Couldn't fetch products, because of the error "${error.message}"`,
 					);
+					setIsLoading(false);
 				});
 		}
 
@@ -170,6 +175,7 @@ const App = () => {
 						onHideSidebar: () => setIsSidebarVisible(false),
 						onLike,
 						isSidebarVisible,
+						isLoading,
 						onShowSidebar: () => setIsSidebarVisible(true),
 						onSuccess: setSuccess,
 					} satisfies ContextType

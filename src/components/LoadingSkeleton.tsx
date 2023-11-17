@@ -1,9 +1,7 @@
-import React from "react";
-
 const LoadingSkeleton = () => {
 	return (
-		<div className="card" aria-hidden="true">
-			<div> </div>
+		<div className="card w-100" aria-hidden="true">
+			<div className="card-img-top"> </div>
 			<div className="card-body">
 				<h5 className="card-title placeholder-glow">
 					<span className="placeholder col-6"></span>
@@ -18,7 +16,8 @@ const LoadingSkeleton = () => {
 				<a
 					href="#"
 					tabIndex={-1}
-					className="btn btn-primary disabled placeholder col-6"></a>
+					className="btn btn-primary disabled placeholder col-6"
+				></a>
 			</div>
 		</div>
 	);
