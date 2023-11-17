@@ -1,10 +1,11 @@
 import useAuth from "../hooks/useAuth";
 import { User } from "../interfaces/User";
 import ShoppingBasket from "./ShoppingBasket";
-import { Badge, Button, Modal } from "react-bootstrap";
+import { Badge, Button, Modal, Spinner } from "react-bootstrap";
 import axios, { AxiosError } from "axios";
 import { getBaseURL, getProductImageURL } from "../config/Configuration";
 import { Order } from "../interfaces/Order";
+import { useState } from "react";
 
 interface Props {
 	orders: Order[];
@@ -28,6 +29,7 @@ const ShoppingCart = ({
 	onSuccess,
 }: Props) => {
 	const user: User | null = useAuth();
+	const [isLoading, setIsLoading] = useState(false);
 
 	if (!user) return;
 
@@ -51,9 +53,11 @@ const ShoppingCart = ({
 			return;
 		}
 
+		setIsLoading(true);
 		axios
 			.post(getBaseURL() + "products/purchased/new", purchasedOrders)
 			.then((res) => {
+				setIsLoading(false);
 				if (res.data == false) {
 					onError("Purchase failed!");
 				} else {
@@ -70,6 +74,7 @@ const ShoppingCart = ({
 			})
 			.catch((e: AxiosError) => {
 				onError(`Purchase failed, because of the error "${e.message}"`);
+				setIsLoading(false);
 			});
 	};
 
@@ -160,14 +165,27 @@ const ShoppingCart = ({
 						<p className="total-price d-inline me-2 text-white fw-bold">
 							${totalPrice}
 						</p>
-						<Button
-							className="btn-sm"
-							variant="primary"
-							onClick={onPurchase}
-							disabled={orders.length == 0}
-						>
-							BUY NOW
-						</Button>
+						{isLoading ? (
+							<Button className="btn-sm" variant="primary" disabled>
+								<Spinner
+									as="span"
+									animation="grow"
+									size="sm"
+									role="status"
+									aria-hidden="true"
+								/>
+								Buying...
+							</Button>
+						) : (
+							<Button
+								className="btn-sm"
+								variant="primary"
+								onClick={onPurchase}
+								disabled={orders.length == 0}
+							>
+								BUY NOW
+							</Button>
+						)}
 					</div>
 				</Modal.Footer>
 			</Modal>
