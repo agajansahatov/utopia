@@ -15,7 +15,10 @@ const Favourites = ({ products, favourites, onAddToCart, onLike }: Props) => {
 
 	const favouriteProducts: Product[] = [];
 	favourites.forEach((f) => {
-		favouriteProducts.unshift(products[f.product - 1]);
+		const product = products.find((product) => product.id === f.product);
+		if (product) {
+			favouriteProducts.unshift({ ...product });
+		}
 	});
 
 	if (favouriteProducts.length == 0 && !error && !isLoading) {

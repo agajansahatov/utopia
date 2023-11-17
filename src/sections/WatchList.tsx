@@ -43,7 +43,10 @@ const WatchList = ({ products, favourites, onAddToCart, onLike }: Props) => {
 
 	const vProducts: Product[] = [];
 	visitedProducts.forEach((v) => {
-		vProducts.unshift(products[v.product - 1]);
+		const product = products.find((product) => product.id === v.product);
+		if (product) {
+			vProducts.unshift({ ...product });
+		}
 	});
 
 	if (vProducts.length == 0 && !error && !isLoading && !isVisitedLoading) {

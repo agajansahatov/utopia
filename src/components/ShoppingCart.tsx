@@ -95,7 +95,9 @@ const ShoppingCart = ({
 				</Modal.Header>
 				<Modal.Body className="p-0">
 					{ordersReversed.length == 0 ? (
-						<p className="text-white">Your UTOPIA Cart is empty!</p>
+						<p className="text-white text-center my-5">
+							Your UTOPIA Cart is empty!
+						</p>
 					) : (
 						<div className="orders p-1 p-sm-2 pb-5 mb-5">
 							<h1 className="py-1 text-white text-center pb-2">Your Orders</h1>
