@@ -10,6 +10,7 @@ import { User } from "./interfaces/User";
 import { Order } from "./interfaces/Order";
 import { getDate } from "./utilities/Date";
 import Toaster from "./components/Toaster";
+import Agreement from "./components/Agreement";
 
 export interface ContextType {
 	products: Product[];
@@ -212,6 +213,8 @@ const App = () => {
 				message={error || success}
 				type={error ? "error" : success ? "success" : null}
 			/>
+
+			<Agreement />
 		</>
 	);
 };
