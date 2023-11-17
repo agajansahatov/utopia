@@ -1,4 +1,4 @@
-import { Button, ToastContainer } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { Navigate, useOutletContext } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { Form } from "react-bootstrap";
@@ -7,7 +7,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import axios from "axios";
-import Toast from "react-bootstrap/Toast";
 import { getBaseURL } from "../config/Configuration";
 import { ContextType } from "../App";
 
@@ -39,6 +38,7 @@ const NewProductForm = () => {
 	const user = useAuth();
 	const { onSuccess } = useOutletContext<ContextType>();
 	const [serviceError, setServiceError] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	if (!user) {
 		return <Navigate to="/" />;
@@ -67,6 +67,7 @@ const NewProductForm = () => {
 		formData.append("date", "");
 		formData.append("popularity", "");
 
+		setIsLoading(true);
 		axios
 			.post(getBaseURL() + "products", formData, {
 				headers: {
@@ -78,10 +79,12 @@ const NewProductForm = () => {
 					onSuccess("A new product is added!");
 					setServiceError("");
 					reset();
+					setIsLoading(false);
 				}
 			})
 			.catch((e) => {
 				setServiceError(e.message);
+				setIsLoading(false);
 			});
 	};
 
@@ -154,9 +157,26 @@ const NewProductForm = () => {
 							)}
 						</Form.Group>
 						<div className="d-flex justify-content-end">
-							<Button variant="primary" type="submit" className="px-5 ps-auto">
-								Add
-							</Button>
+							{isLoading ? (
+								<Button variant="primary" disabled>
+									<Spinner
+										as="span"
+										animation="grow"
+										size="sm"
+										role="status"
+										aria-hidden="true"
+									/>
+									Uploading...
+								</Button>
+							) : (
+								<Button
+									variant="primary"
+									type="submit"
+									className="px-5 ps-auto"
+								>
+									Add
+								</Button>
+							)}
 						</div>
 					</div>
 				</div>
