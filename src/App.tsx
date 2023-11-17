@@ -9,7 +9,7 @@ import { Favourite } from "./interfaces/Favourite";
 import { User } from "./interfaces/User";
 import { Order } from "./interfaces/Order";
 import { getDate } from "./utilities/Date";
-import { Toast, ToastContainer } from "react-bootstrap";
+import Toaster from "./components/Toaster";
 
 export interface ContextType {
 	products: Product[];
@@ -163,6 +163,12 @@ const App = () => {
 		}
 	}, []);
 
+	useEffect(() => {
+		if (error || success) {
+			setIsToasterVisible(true);
+		}
+	}, [error, success]);
+
 	return (
 		<>
 			<Outlet
@@ -196,45 +202,12 @@ const App = () => {
 				/>
 			)}
 
-			{/* Error Toaster */}
-			<ToastContainer
-				className="status-toaster p-3 position-fixed "
-				position="middle-center"
-			>
-				<Toast
-					// delay={3000}
-					// autohide
-					className="bg-danger text-white z-1 toast"
-					onClose={() => setError("")}
-					show={isError}
-					style={{ boxShadow: "0 0 10px 0 #fff" }}
-				>
-					<Toast.Header>
-						<strong className="me-auto">Failure</strong>
-					</Toast.Header>
-					<Toast.Body className="text-center">{error}</Toast.Body>
-				</Toast>
-			</ToastContainer>
-
-			{/* Success Toaster */}
-			<ToastContainer
-				className="status-toaster p-3 position-fixed"
-				position="middle-center"
-			>
-				<Toast
-					// delay={3000}
-					// autohide
-					className="bg-success text-white z-1 toast"
-					onClose={() => setSuccess("")}
-					show={isSuccess}
-					style={{ boxShadow: "0 0 10px 0px #fff" }}
-				>
-					<Toast.Header>
-						<strong className="me-auto">Success</strong>
-					</Toast.Header>
-					<Toast.Body className="text-center">{success}</Toast.Body>
-				</Toast>
-			</ToastContainer>
+			<Toaster
+				isVisible={isToasterVisible}
+				onClose={() => setIsToasterVisible(false)}
+				message={error || success}
+				type={error ? "error" : success ? "success" : null}
+			/>
 		</>
 	);
 };
