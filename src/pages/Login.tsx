@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/Button";
 import { Link, Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { Col, Form, Row } from "react-bootstrap";
+import { Col, Form, Row, Spinner } from "react-bootstrap";
 import NavbarBottom from "./../components/NavbarBottom";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -42,26 +42,23 @@ type FormData = z.infer<typeof schema>;
 
 const Login = () => {
 	const [serviceError, setServiceError] = useState("");
-
-	const user = useAuth();
-	if (user) {
-		return <Navigate to="/" />;
-	}
+	const [isLoading, setIsLoading] = useState(false);
 
 	const {
 		register,
 		handleSubmit,
-		reset,
 		formState: { errors },
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
 	const onSubmit = (data: FieldValues) => {
+		setIsLoading(true);
 		axios
 			.post(getBaseURL() + "auth", {
 				contact: data.contactInfo,
 				password: data.password,
 			})
 			.then((res) => {
+				setIsLoading(false);
 				const data = res.data;
 				if (data.contact) {
 					localStorage.setItem("user", JSON.stringify(res.data));
@@ -72,10 +69,16 @@ const Login = () => {
 				}
 			})
 			.catch((e) => {
+				setIsLoading(false);
 				localStorage.removeItem("user");
-				setServiceError("Wrong Credentials!");
+				setServiceError(`Wrong Credentials!`);
 			});
 	};
+
+	const user = useAuth();
+	if (user) {
+		return <Navigate to="/" />;
+	}
 
 	return (
 		<>
@@ -90,7 +93,6 @@ const Login = () => {
 					<Form
 						onSubmit={handleSubmit((data) => {
 							onSubmit(data);
-							reset();
 						})}
 						className="mb-2"
 					>
@@ -138,17 +140,35 @@ const Login = () => {
 								</Link>
 							</Col>
 						</Row>
-						<div className="d-grid gap-4 d-block">
-							<Button variant="primary" type="submit" size="lg">
-								Login
-							</Button>
-							<Link
-								className="btn btn-outline-info btn-lg d-block"
-								to="/register"
-							>
-								Create account
-							</Link>
-						</div>
+						{isLoading ? (
+							<div className="d-grid gap-4 d-block">
+								<Button variant="primary" disabled>
+									<Spinner
+										as="span"
+										animation="grow"
+										size="sm"
+										role="status"
+										aria-hidden="true"
+									/>
+									Logging in...
+								</Button>
+								<Button className="btn-outline-info btn-lg d-block" disabled>
+									Create account
+								</Button>
+							</div>
+						) : (
+							<div className="d-grid gap-4 d-block">
+								<Button variant="primary" type="submit" size="lg">
+									Login
+								</Button>
+								<Link
+									className="btn btn-outline-info btn-lg d-block"
+									to="/register"
+								>
+									Create account
+								</Link>
+							</div>
+						)}
 					</Form>
 				</div>
 			</main>
