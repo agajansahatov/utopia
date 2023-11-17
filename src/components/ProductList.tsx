@@ -20,6 +20,8 @@ const ProductList = ({
 }: Props) => {
 	const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+	console.log(products);
+
 	if (products.length == 0 && isLoading == true) {
 		return (
 			<div className="row w-100 p-0 m-0">
@@ -38,9 +40,9 @@ const ProductList = ({
 	} else {
 		return (
 			<div className="row w-100 p-0 m-0">
-				{products.map((product) => (
+				{products.map((product, index) => (
 					<div
-						key={product.id}
+						key={index}
 						className="col-12 col-md-6 col-xl-4 d-flex justify-content-center"
 					>
 						<ProductCard
