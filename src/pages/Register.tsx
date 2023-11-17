@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Spinner } from "react-bootstrap";
 import NavbarBottom from "../components/NavbarBottom";
 import { z } from "zod";
 import { FieldValues, useForm } from "react-hook-form";
@@ -46,16 +46,10 @@ type FormData = z.infer<typeof schema>;
 
 const Register = () => {
 	const [serviceError, setServiceError] = useState("");
-
-	const user = useAuth();
-	if (user) {
-		return <Navigate to="/" />;
-	}
-
+	const [isLoading, setIsLoading] = useState(false);
 	const {
 		register,
 		handleSubmit,
-		reset,
 		formState: { errors },
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
@@ -65,6 +59,7 @@ const Register = () => {
 			return;
 		}
 
+		setIsLoading(true);
 		axios
 			.post(getBaseURL() + "users", {
 				contact: data.contactInfo,
@@ -72,6 +67,7 @@ const Register = () => {
 				address: data.address,
 			})
 			.then((res) => {
+				setIsLoading(false);
 				const data: User = res.data;
 				if (data.contact) {
 					localStorage.setItem("user", JSON.stringify(res.data));
@@ -84,8 +80,14 @@ const Register = () => {
 			.catch((e) => {
 				localStorage.removeItem("user");
 				setServiceError(e.message);
+				setIsLoading(false);
 			});
 	};
+
+	const user = useAuth();
+	if (user) {
+		return <Navigate to="/" />;
+	}
 
 	return (
 		<>
@@ -100,7 +102,6 @@ const Register = () => {
 					<Form
 						onSubmit={handleSubmit((data) => {
 							onSubmit(data);
-							reset();
 						})}
 						className="mb-2"
 					>
@@ -153,10 +154,22 @@ const Register = () => {
 								<p className="text-danger">{errors.password2.message}</p>
 							)}
 						</Form.Group>
-
-						<Button variant="primary" type="submit" className="text-nowrap">
-							Create account
-						</Button>
+						{isLoading ? (
+							<Button variant="primary" disabled>
+								<Spinner
+									as="span"
+									animation="grow"
+									size="sm"
+									role="status"
+									aria-hidden="true"
+								/>
+								Creating your account ...
+							</Button>
+						) : (
+							<Button variant="primary" type="submit" className="text-nowrap">
+								Create account
+							</Button>
+						)}
 					</Form>
 				</div>
 			</main>
