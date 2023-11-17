@@ -138,27 +138,31 @@ const App = () => {
 				.get(getBaseURL() + "products")
 				.then((res) => {
 					setProducts(res.data);
-					setIsLoading(false);
+
+					if (!user) {
+						setIsLoading(false);
+						return;
+					}
+					if (favourites.length == 0) {
+						axios
+							.get(`${getBaseURL()}favourites/${user.id}`)
+							.then((res) => {
+								setFavourites(res.data);
+								setIsLoading(false);
+							})
+							.catch((error) => {
+								setError(
+									`Couldn't fetch favourites list, because of the error "${error.message}"`,
+								);
+								setIsLoading(false);
+							});
+					}
 				})
 				.catch((error) => {
 					setError(
 						`Couldn't fetch products, because of the error "${error.message}"`,
 					);
 					setIsLoading(false);
-				});
-		}
-
-		if (!user) return;
-		if (favourites.length == 0) {
-			axios
-				.get(`${getBaseURL()}favourites/${user.id}`)
-				.then((res) => {
-					setFavourites(res.data);
-				})
-				.catch((error) => {
-					setError(
-						`Couldn't fetch favourites list, because of the error "${error.message}"`,
-					);
 				});
 		}
 	}, []);
