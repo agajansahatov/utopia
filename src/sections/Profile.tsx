@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Spinner } from "react-bootstrap";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import useAuth from "../hooks/useAuth";
 import { User } from "../interfaces/User";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { getBaseURL } from "../config/Configuration";
 
 const isPhoneNumber = (val: string) => {
@@ -41,12 +40,12 @@ type FormData = z.infer<typeof schema>;
 
 const Profile = () => {
 	const [serviceError, setServiceError] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	const user = useAuth();
 	if (!user) {
 		return;
 	}
-	const [userFormInfo, setUserFormInfo] = useState<User>(user);
 
 	const {
 		register,
@@ -65,6 +64,7 @@ const Profile = () => {
 		user.contact = data.contactInfo;
 		user.password = data.password1;
 
+		setIsLoading(true);
 		axios
 			.put(getBaseURL() + "users", user)
 			.then((res) => {
@@ -72,11 +72,13 @@ const Profile = () => {
 				if (data.contact) {
 					localStorage.removeItem("user");
 					localStorage.setItem("user", JSON.stringify(res.data));
-					window.location.pathname = "/account";
+					setIsLoading(false);
+					window.location.pathname = "/account/profile";
 				}
 			})
 			.catch((e) => {
 				setServiceError(e.message);
+				setIsLoading(false);
 			});
 	};
 
@@ -157,9 +159,22 @@ const Profile = () => {
 						</Form.Group>
 
 						<div className="d-flex justify-content-end">
-							<Button variant="primary" type="submit" className="text-nowrap">
-								SAVE
-							</Button>
+							{isLoading ? (
+								<Button variant="primary" disabled>
+									<Spinner
+										as="span"
+										animation="grow"
+										size="sm"
+										role="status"
+										aria-hidden="true"
+									/>
+									Updating...
+								</Button>
+							) : (
+								<Button variant="primary" type="submit" className="text-nowrap">
+									SAVE
+								</Button>
+							)}
 						</div>
 					</Form>
 				</div>
