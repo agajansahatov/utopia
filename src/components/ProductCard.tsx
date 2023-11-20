@@ -19,7 +19,7 @@ const ProductCard = ({ product, onAddToCart, onLike, isLiked }: Props) => {
 	return (
 		<div className="card">
 			<img
-				src={getProductImageURL(product.image)}
+				src={getProductImageURL(product.imageName)}
 				className="card-img-top object-fit-contain px-3 pt-3"
 				alt="Product image"
 			/>

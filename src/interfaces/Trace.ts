@@ -1,4 +1,4 @@
-export interface Favourite {
+export interface Trace {
 	userId: number;
 	productId: number;
 	date: string;

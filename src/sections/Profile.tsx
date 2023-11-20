@@ -66,7 +66,7 @@ const Profile = () => {
 
 		setIsLoading(true);
 		axios
-			.put(getBaseURL() + "users", user)
+			.put(`${getBaseURL()}/users`, user)
 			.then((res) => {
 				const data: User = res.data;
 				if (data.contact) {

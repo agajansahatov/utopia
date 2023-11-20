@@ -11,10 +11,12 @@ import { Order } from "./interfaces/Order";
 import { getDate } from "./utilities/Date";
 import Toaster from "./components/Toaster";
 import Agreement from "./components/Agreement";
+import { Trace } from "./interfaces/Trace";
 
 export interface ContextType {
 	products: Product[];
 	favourites: Favourite[];
+	traces: Trace[] | null;
 	error: string;
 	isSidebarVisible: boolean;
 	isLoading: boolean;
@@ -24,6 +26,7 @@ export interface ContextType {
 	onShowSidebar: () => void;
 	onError: (msg: string) => void;
 	onSuccess: (msg: string) => void;
+	onSetTraces: (traces: Trace[]) => void;
 }
 
 const App = () => {
@@ -31,6 +34,7 @@ const App = () => {
 	const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 	const [products, setProducts] = useState<Product[]>([]);
 	const [favourites, setFavourites] = useState<Favourite[]>([]);
+	const [traces, setTraces] = useState<Trace[] | null>(null);
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [shoppingCartVisible, setShoppingCartVisible] = useState(false);
 	const [error, setError] = useState("");
@@ -45,7 +49,7 @@ const App = () => {
 		}
 		// Check if the product's id already exists in orders
 		const orderIndex = orders.findIndex(
-			(order) => order.product === product.id,
+			(order) => order.productId === product.id,
 		);
 
 		if (orderIndex !== -1) {
@@ -59,13 +63,13 @@ const App = () => {
 				return;
 			}
 			const newOrder: Order = {
-				user: user.id,
-				product: product.id,
+				userId: user.id,
+				productId: product.id,
 				quantity: 1,
 				destination: user.address,
 				status: "Pending",
-				date: getDate(),
-				image: product.image,
+				date: getDate(new Date().toISOString()),
+				image: product.imageName,
 				name: product.name,
 				price: product.price,
 			};
@@ -98,37 +102,61 @@ const App = () => {
 	const onLike = (productId: number) => {
 		if (!user || user.id == null) return;
 
-		const existsInFavourites: boolean = favourites.some(
-			(fav) => fav.user === user.id && fav.product === productId,
-		);
+		let currentFavourite: Favourite;
+		const existsInFavourites = favourites.some((fav) => {
+			const isMatch = fav.userId === user.id && fav.productId === productId;
+			if (isMatch) {
+				currentFavourite = fav;
+			}
+			return isMatch;
+		});
 
 		if (existsInFavourites) {
 			// Remove fProduct from favourites array
 			const newFavourites = favourites.filter(
-				(fav) => !(fav.user === user.id && fav.product === productId),
+				(fav) => !(fav.userId === user.id && fav.productId === productId),
 			);
 			setFavourites(newFavourites);
 
 			//Call backend to delete it from the database
-			axios.delete(getBaseURL() + "favourites", {
-				data: {
-					user: user.id,
-					product: productId,
-				},
-			});
+			axios
+				.delete(`${getBaseURL()}/favourites`, {
+					data: {
+						userId: user.id,
+						productId: productId,
+					},
+				})
+				.catch((error) => {
+					// Add fProduct to favourites array
+					const newFavourites = [...favourites, currentFavourite];
+					setFavourites(newFavourites);
+					setError(`Couldn't remove like, because of "${error}"`);
+				});
 		} else {
 			// Add fProduct to favourites array
 			const newFavourites = [
 				...favourites,
-				{ user: user.id, product: productId },
+				{
+					userId: user.id,
+					productId: productId,
+					date: new Date().toISOString(),
+				},
 			];
 			setFavourites(newFavourites);
 
-			//Call the backend for adding it to the database
-			axios.post(getBaseURL() + "favourites", {
-				user: user.id,
-				product: productId,
-			});
+			axios
+				.post(`${getBaseURL()}/favourites`, {
+					userId: user.id,
+					productId: productId,
+				})
+				.catch((error) => {
+					// Remove fProduct from favourites array
+					const newFavourites = favourites.filter(
+						(fav) => !(fav.userId === user.id && fav.productId === productId),
+					);
+					setFavourites(newFavourites);
+					setError(`Couldn't put like, because of "${error}"`);
+				});
 		}
 	};
 
@@ -136,34 +164,44 @@ const App = () => {
 		if (products.length == 0) {
 			setIsLoading(true);
 			axios
-				.get(getBaseURL() + "products")
+				.get(`${getBaseURL()}/products`)
 				.then((res) => {
 					setProducts(res.data);
-
-					if (!user) {
-						setIsLoading(false);
-						return;
-					}
-					if (favourites.length == 0) {
-						axios
-							.get(`${getBaseURL()}favourites/${user.id}`)
-							.then((res) => {
-								setFavourites(res.data);
-								setIsLoading(false);
-							})
-							.catch((error) => {
-								setError(
-									`Couldn't fetch favourites list, because of the error "${error.message}"`,
-								);
-								setIsLoading(false);
-							});
-					}
+					setIsLoading(false);
 				})
 				.catch((error) => {
 					setError(
 						`Couldn't fetch products, because of the error "${error.message}"`,
 					);
 					setIsLoading(false);
+				});
+		}
+
+		if (!user) return;
+
+		if (favourites.length == 0) {
+			axios
+				.get(`${getBaseURL()}/favourites/${user.id}`)
+				.then((res) => {
+					setFavourites(res.data);
+				})
+				.catch((error) => {
+					setError(
+						`Couldn't fetch favourites list, because of the error "${error.message}"`,
+					);
+				});
+		}
+
+		if (!traces || traces.length == 0) {
+			axios
+				.get(`${getBaseURL()}/traces/${user.id}`)
+				.then((res) => {
+					setTraces(res.data);
+				})
+				.catch((error) => {
+					setError(
+						`Couldn't fetch watchlist, because of the error "${error.message}"`,
+					);
 				});
 		}
 	}, []);
@@ -181,6 +219,7 @@ const App = () => {
 					{
 						products,
 						favourites,
+						traces,
 						error,
 						onAddToCart,
 						onError: setError,
@@ -190,6 +229,7 @@ const App = () => {
 						isLoading,
 						onShowSidebar: () => setIsSidebarVisible(true),
 						onSuccess: setSuccess,
+						onSetTraces: setTraces,
 					} satisfies ContextType
 				}
 			/>

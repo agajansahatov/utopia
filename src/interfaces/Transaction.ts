@@ -1,11 +1,9 @@
-export interface Order {
+export interface Transaction {
+	id: number;
 	userId: number;
 	productId: number;
 	destination: string;
 	status: string;
 	quantity: number;
 	date: string;
-	image: string;
-	name: string;
-	price: string;
 }

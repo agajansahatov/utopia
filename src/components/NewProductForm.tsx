@@ -52,24 +52,22 @@ const NewProductForm = () => {
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
 	const onSubmit = (data: FieldValues) => {
-		if (data.description.length > 900) {
-			setServiceError("Description should be less than 900 characters");
+		if (data.description.length > 1500) {
+			setServiceError("Description should be less than 1500 characters");
 			return;
 		}
 
 		const formData = new FormData();
 		formData.append("file", data.image[0]);
 		formData.append("name", data.name);
-		formData.append("image", "");
+		formData.append("imageName", "");
 		formData.append("description", data.description);
 		formData.append("price", data.price.toString());
 		formData.append("category", data.category);
-		formData.append("date", "");
-		formData.append("popularity", "");
 
 		setIsLoading(true);
 		axios
-			.post(getBaseURL() + "products", formData, {
+			.post(`${getBaseURL()}/products`, formData, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},

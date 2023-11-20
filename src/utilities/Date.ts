@@ -1,8 +1,9 @@
-export function getDate(): string {
-	const today: Date = new Date();
-	const year: number = today.getFullYear();
-	const month: number = today.getMonth() + 1; // Months are zero-based, so we add 1
-	const day: number = today.getDate();
+export function getDate(strDate: string): string {
+	const originalDate = new Date(strDate);
+	
+	const year = originalDate.getFullYear();
+	const month = originalDate.getMonth() + 1; // Months are zero-based, so add 1
+	const day = originalDate.getDate();
 
 	return `${day}.${month}.${year}`;
 }

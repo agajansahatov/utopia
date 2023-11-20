@@ -13,9 +13,15 @@ interface Props {
 const Favourites = ({ products, favourites, onAddToCart, onLike }: Props) => {
 	const { isLoading, error } = useOutletContext<ContextType>();
 
+	// Sorting the data in asc order
+	const sortedFavourites: Favourite[] = [...favourites];
+	sortedFavourites.sort(
+		(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+	);
+
 	const favouriteProducts: Product[] = [];
-	favourites.forEach((f) => {
-		const product = products.find((product) => product.id === f.product);
+	sortedFavourites.forEach((f) => {
+		const product = products.find((product) => product.id === f.productId);
 		if (product) {
 			favouriteProducts.unshift({ ...product });
 		}

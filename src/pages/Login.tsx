@@ -53,7 +53,7 @@ const Login = () => {
 	const onSubmit = (data: FieldValues) => {
 		setIsLoading(true);
 		axios
-			.post(getBaseURL() + "auth", {
+			.post(`${getBaseURL()}/auth`, {
 				contact: data.contactInfo,
 				password: data.password,
 			})

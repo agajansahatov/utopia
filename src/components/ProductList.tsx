@@ -34,7 +34,7 @@ const ProductList = ({
 			</div>
 		);
 	} else if (products.length == 0 && isLoading == false) {
-		return;
+		return <h3 className="text-center py-3">Products list is empty.</h3>;
 	} else {
 		return (
 			<div className="row w-100 p-0 m-0">
@@ -47,7 +47,7 @@ const ProductList = ({
 							product={product}
 							onAddToCart={(product) => onAddToCart(product)}
 							onLike={onLike}
-							isLiked={favourites.some((fav) => fav.product === product.id)}
+							isLiked={favourites.some((fav) => fav.productId === product.id)}
 						/>
 					</div>
 				))}

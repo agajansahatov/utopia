@@ -11,18 +11,18 @@ export function getBrand() {
 }
 
 export function getBaseURL() {
-	return "https://utopia-api-x4re.onrender.com/";
-	// return "http://localhost:8080/";
+	// return "https://utopia-api-x4re.onrender.com";
+	return "http://localhost:8080";
 }
 
 export function getProductImageURL(imageName: string) {
-	return getBaseURL() + "images/products/" + imageName;
+	return `${getBaseURL()}/images/products/${imageName}`;
 }
 
 export function getUserImageURL(imageName: string) {
-	return getBaseURL() + "images/users/" + imageName;
+	return `${getBaseURL()}/images/users/${imageName}`;
 }
 
 export function getProductVideoURL(videoName: string) {
-	return getBaseURL() + "videos/" + videoName;
+	return `${getBaseURL()}/videos/${videoName}`;
 }

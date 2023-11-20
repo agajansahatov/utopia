@@ -61,10 +61,11 @@ const Register = () => {
 
 		setIsLoading(true);
 		axios
-			.post(getBaseURL() + "users", {
+			.post(`${getBaseURL()}/users`, {
 				contact: data.contactInfo,
 				password: data.password1,
 				address: data.address,
+				balance: 5000,
 			})
 			.then((res) => {
 				setIsLoading(false);

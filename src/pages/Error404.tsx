@@ -1,15 +1,43 @@
-import { Link, isRouteErrorResponse, useRouteError } from "react-router-dom";
+import {
+	Link,
+	isRouteErrorResponse,
+	useLocation,
+	useRouteError,
+} from "react-router-dom";
 
-const Error404 = () => {
+interface Props {
+	message?: string;
+	type?: number;
+}
+
+const Error404 = ({ message, type }: Props) => {
 	const error = useRouteError() as Error;
-	console.log(error);
+
+	const location = useLocation();
+	const locationError = location.state?.error as Error;
+
+	let errorMessage: string;
+	if (message) {
+		errorMessage = message;
+	} else if (locationError) {
+		errorMessage = locationError.message;
+	} else {
+		errorMessage = error.message;
+	}
+
+	console.error(errorMessage);
+
 	const error404 = (
 		<div>
 			<h1 className="display-1 fw-bold">404</h1>
 			<p className="fs-3">
 				<span className="text-danger">Opps!</span> Page not found.
 			</p>
-			<p className="lead">The page you’re looking for doesn’t exist.</p>
+			<p className="lead">
+				{errorMessage
+					? errorMessage
+					: "The page you’re looking for doesn’t exist."}
+			</p>
 		</div>
 	);
 
@@ -19,15 +47,13 @@ const Error404 = () => {
 			<p className="fs-3">
 				<span className="text-danger">Opps!</span>
 			</p>
-			<p className="lead">{error.message}</p>
+			<p className="lead">{errorMessage}</p>
 		</div>
 	);
 	return (
-		<div
-			className="d-flex align-items-center justify-content-center vh-100"
-			style={{ marginTop: "-42px" }}>
+		<div className="position-fixed vh-100 w-100 d-flex align-items-center justify-content-center error-page bg-body-tertiary">
 			<div className="text-center">
-				{isRouteErrorResponse(error) ? error404 : otherError}
+				{isRouteErrorResponse(error) || type === 404 ? error404 : otherError}
 				<Link to="/" className="btn btn-primary">
 					Go Home
 				</Link>

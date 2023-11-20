@@ -1,10 +1,4 @@
-import {
-	Link,
-	useParams,
-	useNavigate,
-	useLocation,
-	useOutletContext,
-} from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getBaseURL, getProductImageURL } from "../config/Configuration";
@@ -22,9 +16,11 @@ import { BsEyeFill } from "react-icons/bs";
 import { TbClover } from "react-icons/tb";
 import { TfiMoreAlt } from "react-icons/tfi";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import Error404 from "./Error404";
+import { Trace } from "../interfaces/Trace";
 
 const ProductDetails = () => {
-	const { onAddToCart, onLike, favourites, onError } =
+	const { favourites, traces, onAddToCart, onLike, onError, onSetTraces } =
 		useOutletContext<ContextType>();
 	const user: User | null = useAuth();
 	const { productId } = useParams();
@@ -34,6 +30,7 @@ const ProductDetails = () => {
 	const [likedCount, setLikedCount] = useState(0);
 	const [visitedCount, setVisitedCount] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
+	const [is404, setIs404] = useState(false);
 
 	useEffect(() => {
 		if (id !== Number(productId)) {
@@ -44,51 +41,117 @@ const ProductDetails = () => {
 	useEffect(() => {
 		if (id !== -1) {
 			setIsLoading(true);
+
 			axios
-				.get(`${getBaseURL()}products/${id}`)
+				.get(`${getBaseURL()}/products/${id}`)
 				.then((res) => {
 					setProduct(res.data);
+					if (traces == undefined || traces == null) return;
 
-					if (user !== null) {
-						axios.post(getBaseURL() + "visited", {
-							user: user.id,
-							product: productId,
-						});
+					if (user !== null && user.id !== null) {
+						const exists = traces.some(
+							(trace) => trace.userId === user.id && trace.productId === id,
+						);
+
+						if (exists) {
+							axios
+								.put(`${getBaseURL()}/traces`, {
+									userId: user.id,
+									productId: productId,
+								})
+								.then((res) => {
+									const data: Trace = res.data;
+									const newTraces = traces.map((trace) => {
+										if (
+											trace.userId === data.userId &&
+											trace.productId === data.productId
+										) {
+											return { ...trace, value: data };
+										}
+										return trace;
+									});
+
+									onSetTraces([...newTraces]);
+								})
+								.catch((error) => {
+									onError(`Couldn't toggle watchlist, because of "${error}"`);
+								});
+						} else {
+							axios
+								.post(`${getBaseURL()}/traces`, {
+									userId: user.id,
+									productId: productId,
+								})
+								.then((res) => {
+									const data: Trace = res.data;
+									onSetTraces([...traces, { ...data }]);
+									setVisitedCount(visitedCount + 1);
+								})
+								.catch((error) => {
+									// if (error.response && error.response.status == 409) {
+									// 	const newTraces = [
+									// 		...traces,
+									// 		{
+									// 			userId: Number(user.id),
+									// 			productId:
+									// 				productId !== undefined
+									// 					? Number(productId)
+									// 					: undefined,
+									// 			date: new Date().toISOString(),
+									// 		} as Trace,
+									// 	];
+
+									// 	onSetTraces(newTraces);
+									// 	setVisitedCount(visitedCount + 1);
+									// 	return;
+									// }
+									onError(`Couldn't add to watchlist, because of "${error}"`);
+								});
+						}
 					}
 
 					setIsLoading(false);
 				})
 				.catch((error) => {
-					onError(
-						`Couldn't fetch product details, because of the error "${error.message}"`,
-					);
+					if (error.response && error.response.status === 404) {
+						setIs404(true);
+					} else {
+						onError(`Couldn't fetch product details: ${error.message}`);
+					}
+
 					setIsLoading(false);
 				});
 
 			axios
-				.get(`${getBaseURL()}favourites/count/${id}`)
+				.get(`${getBaseURL()}/favourites/count/${id}`)
 				.then((res) => {
 					setLikedCount(res.data);
 				})
 				.catch((error) => {
-					onError(
-						`Couldn't fetch number of likes, because of the error "${error.message}"`,
-					);
+					onError(`Couldn't fetch number of likes: ${error.message}`);
 				});
+
 			axios
-				.get(`${getBaseURL()}visited/count/${id}`)
+				.get(`${getBaseURL()}/traces/count/${id}`)
 				.then((res) => {
 					setVisitedCount(res.data);
 				})
 				.catch((error) => {
-					onError(
-						`Couldn't fetch count of visites, because of the error "${error.message}"`,
-					);
+					onError(`Couldn't fetch count of visits: ${error.message}`);
 				});
 		}
 	}, [id]);
 
 	if (!product) {
+		if (is404) {
+			return (
+				<Error404
+					message="This product is not found in our store!"
+					type={404}
+				/>
+			);
+		}
+
 		return (
 			<>
 				<NavbarTop links={getNavbarLinks()} isFullWidth={true} />
@@ -118,7 +181,7 @@ const ProductDetails = () => {
 		description = product.description.substring(0, descriptionLength);
 	}
 
-	const isLiked = favourites.some((fav) => fav.product === product.id);
+	const isLiked = favourites.some((fav) => fav.productId === product.id);
 	const handleLike = () => {
 		if (isLiked) {
 			setLikedCount(likedCount - 1);
@@ -137,7 +200,7 @@ const ProductDetails = () => {
 					<div className="row">
 						<div className="col-12 col-sm-6 overflow-hidden p-3 d-flex align-items-center bg-body-tertiary">
 							<img
-								src={getProductImageURL(product.image)}
+								src={getProductImageURL(product.imageName)}
 								alt="Product Image"
 								className="product-details__image object-fit-contain"
 							/>

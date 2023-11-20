@@ -46,6 +46,7 @@ const ShoppingCart = ({
 		const purchasedOrders = [...orders].map((order) => ({
 			...order,
 			status: "Paid",
+			date: new Date(),
 		}));
 
 		if (totalPrice > parseInt(user.balance)) {
@@ -55,7 +56,7 @@ const ShoppingCart = ({
 
 		setIsLoading(true);
 		axios
-			.post(getBaseURL() + "products/purchased/new", purchasedOrders)
+			.post(`${getBaseURL()}/transactions`, purchasedOrders)
 			.then((res) => {
 				setIsLoading(false);
 				if (res.data == false) {

@@ -164,6 +164,11 @@
 	z-index: 10000;
 }
 
+.error-page {
+	z-index: 999999;
+	padding-bottom: 100px;
+}
+
 .status-toaster {
 	z-index: 99999;
 	width: 200px;
