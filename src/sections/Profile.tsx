@@ -59,14 +59,16 @@ const Profile = () => {
 			setServiceError("Passwords doesn't match!");
 			return;
 		}
-		user.name = data.name;
-		user.address = data.address;
-		user.contact = data.contactInfo;
-		user.password = data.password1;
+
+		let updatedUser = { ...user };
+		updatedUser.name = data.name;
+		updatedUser.address = data.address;
+		updatedUser.contact = data.contactInfo;
+		updatedUser.password = data.password1;
 
 		setIsLoading(true);
 		axios
-			.put(`${getBaseURL()}/users`, user)
+			.put(`${getBaseURL()}/users`, { oldUser: user, updatedUser })
 			.then((res) => {
 				const data: User = res.data;
 				if (data.contact) {
@@ -76,8 +78,21 @@ const Profile = () => {
 					window.location.pathname = "/account/profile";
 				}
 			})
-			.catch((e) => {
-				setServiceError(e.message);
+			.catch((error) => {
+				if (error.response) {
+					// The request was made and the server responded with a status code
+					console.error(
+						"Server responded with error status:",
+						error.response.status,
+					);
+					console.error("Error message:", error.response.data);
+				} else if (error.request) {
+					// The request was made but no response was received
+					console.error("No response received from server:", error.request);
+				} else {
+					// Something else happened while setting up the request
+					console.error("Error during request setup:", error.message);
+				}
 				setIsLoading(false);
 			});
 	};
